@@ -42,9 +42,7 @@ export default function Home() {
           <div>
             <h2 className="text-2xl font-semibold mb-4">About Me</h2>
             <p className="text-gray-600 dark:text-gray-400">
-              I am currently working as a DevOps Intern at AppifyLab, focusing on Docker, Nginx, and CI/CD pipelines.
-              With a strong background in competitive programming and a passion for problem-solving,
-              I have participated in numerous programming contests and solved over 2000 problems across various platforms.
+              With a strong foundation in competitive programming and over 2000 problems solved across various platforms, I bring a problem-solving mindset to every challenge. My expertise spans Docker, Nginx, and CI/CD pipelines, making me well-equipped to build and optimize efficient workflows in dynamic environments.
             </p>
           </div>
           <div>
