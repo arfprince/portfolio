@@ -1,5 +1,5 @@
 'use client';
-
+import { ReactElement } from "react";
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import SectionWrapper from './SectionWrapper';
@@ -24,7 +24,7 @@ const Skills = () => {
   ];
 
   const getIcon = (skillName: string) => {
-    const iconMap: { [key: string]: JSX.Element } = {
+    const iconMap: { [key: string]: ReactElement } = {
       'React': <FaReact className="text-cyan-500" size={30} />,
       'Next.js': <SiNextdotjs className="text-black dark:text-white" size={30} />,
       'TypeScript': <SiTypescript className="text-blue-600" size={30} />,
