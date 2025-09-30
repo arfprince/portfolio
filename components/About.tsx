@@ -86,23 +86,23 @@ const About = () => {
                 whileHover={{ scale: 1.05 }}
                 className="bg-white dark:bg-gray-800 rounded-lg p-4 text-center shadow-md"
               >
-                <h4 className="text-3xl font-bold text-primary-600">5+</h4>
+                <h4 className="text-3xl font-bold text-primary-600">1+</h4>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Years Experience</p>
               </motion.div>
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 className="bg-white dark:bg-gray-800 rounded-lg p-4 text-center shadow-md"
               >
-                <h4 className="text-3xl font-bold text-primary-600">30+</h4>
+                <h4 className="text-3xl font-bold text-primary-600">10+</h4>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Projects Completed</p>
               </motion.div>
-              <motion.div
+              {/* <motion.div
                 whileHover={{ scale: 1.05 }}
                 className="bg-white dark:bg-gray-800 rounded-lg p-4 text-center shadow-md"
               >
                 <h4 className="text-3xl font-bold text-primary-600">100+</h4>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Happy Clients</p>
-              </motion.div>
+              </motion.div> */}
             </div>
           </motion.div>
 

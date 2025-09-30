@@ -108,6 +108,19 @@ export const projects: Project[] = [
 export const experiences: Experience[] = [
   {
     id: "1",
+    position: "Junior Software Engineer",
+    company: "Appifylab",
+    duration: "2024 - Present",
+    description: [
+      "Developed multiple web applications using modern frameworks",
+      "Built responsive and user-friendly interfaces",
+      "Deployed projects on Vercel and Cloudflare Pages",
+      "Implemented RESTful APIs and database integration"
+    ],
+    technologies: ["React", "Next.js", "Node.js", "Tailwind CSS"]
+  },
+  {
+    id: "2",
     position: "Competitive Programmer",
     company: "Multiple Platforms",
     duration: "2020 - Present",
@@ -118,19 +131,6 @@ export const experiences: Experience[] = [
       "Participated in multiple online programming contests"
     ],
     technologies: ["C++", "Python", "Algorithms", "Data Structures"]
-  },
-  {
-    id: "2",
-    position: "Full Stack Web Developer",
-    company: "Freelance / Personal Projects",
-    duration: "2021 - Present",
-    description: [
-      "Developed multiple web applications using modern frameworks",
-      "Built responsive and user-friendly interfaces",
-      "Deployed projects on Vercel and Cloudflare Pages",
-      "Implemented RESTful APIs and database integration"
-    ],
-    technologies: ["React", "Next.js", "Node.js", "Tailwind CSS"]
   },
   {
     id: "3",
