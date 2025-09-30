@@ -178,9 +178,9 @@ const Skills = () => {
           <div className="text-center">
             <motion.div
               whileHover={{ scale: 1.1 }}
-              className="w-20 h-20 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center mx-auto mb-4"
+              className="w-20 h-20 bg-gradient-to-br from-blue-400 to-blue-700 rounded-full flex items-center justify-center mx-auto mb-4"
             >
-              <span className="text-white text-2xl font-bold">5+</span>
+              <span className="text-white text-2xl font-bold">1+</span>
             </motion.div>
             <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
               Years of Experience

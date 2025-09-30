@@ -133,36 +133,36 @@ const Resume = () => {
           </motion.div>
 
           {/* Additional Info Cards */}
-          <div className="grid md:grid-cols-3 gap-6 mt-8">
+          <div className="flex flex-col md:flex-row gap-6 mt-8 w-full">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
               whileHover={{ scale: 1.05 }}
-              className="bg-white dark:bg-gray-800 rounded-xl p-6 text-center shadow-md"
+              className="bg-white dark:bg-gray-800 rounded-xl p-6 text-center shadow-md flex-1"
             >
-              <div className="w-16 h-16 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-bold text-primary-600">5+</span>
+              <div className="w-16 h-16 bg-blue-400 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl font-bold text-blue-800">1+</span>
               </div>
               <h4 className="font-semibold text-gray-800 dark:text-gray-200">Years Experience</h4>
               <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">In Software Development</p>
             </motion.div>
 
-            <motion.div
+            {/* <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
               whileHover={{ scale: 1.05 }}
-              className="bg-white dark:bg-gray-800 rounded-xl p-6 text-center shadow-md"
+              className="bg-white dark:bg-gray-800 rounded-xl p-6 text-center shadow-md flex-1"
             >
               <div className="w-16 h-16 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl font-bold text-purple-600">30+</span>
               </div>
               <h4 className="font-semibold text-gray-800 dark:text-gray-200">Projects Completed</h4>
               <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Delivered Successfully</p>
-            </motion.div>
+            </motion.div> */}
 
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -170,7 +170,7 @@ const Resume = () => {
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
               whileHover={{ scale: 1.05 }}
-              className="bg-white dark:bg-gray-800 rounded-xl p-6 text-center shadow-md"
+              className="bg-white dark:bg-gray-800 rounded-xl p-6 text-center shadow-md flex-1"
             >
               <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl font-bold text-green-600">15+</span>

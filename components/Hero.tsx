@@ -62,7 +62,7 @@ const Hero = () => {
   return (
     <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-gray-900 via-primary-900/20 to-gray-900">
       {/* Animated Background */}
-      <div className="absolute inset-0 w-full h-full">
+      <div className="absolute inset-0 w-full h-full md:mt-4">
         <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
         <motion.div
           animate={{
@@ -98,7 +98,7 @@ const Hero = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-4"
+              className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4"
             >
               {personalInfo.name}
             </motion.h1>
@@ -179,7 +179,7 @@ const Hero = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-8 py-3 bg-gradient-to-r from-primary-600 to-primary-500 text-white rounded-full font-medium shadow-lg hover:shadow-xl transition-shadow duration-200"
+                className="px-8 py-3 border-2 bg-gradient-to-r from-primary-600 to-primary-500 text-white rounded-full font-medium shadow-lg hover:shadow-xl transition-shadow duration-200"
               >
                 Hire Me
               </motion.button>
