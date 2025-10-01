@@ -110,6 +110,7 @@ const Skills = () => {
 
         {/* Skills Grid */}
         <motion.div
+          key={selectedCategory}
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -118,7 +119,7 @@ const Skills = () => {
         >
           {filteredSkills.map((skill, index) => (
             <motion.div
-              key={skill.name}
+              key={`${selectedCategory}-${skill.name}`}
               variants={itemVariants}
               whileHover={{ 
                 scale: 1.05,
@@ -150,6 +151,7 @@ const Skills = () => {
                   </div>
                   <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
                     <motion.div
+                      key={`${selectedCategory}-${skill.name}-bar`}
                       initial={{ width: 0 }}
                       whileInView={{ width: `${skill.level}%` }}
                       viewport={{ once: true }}

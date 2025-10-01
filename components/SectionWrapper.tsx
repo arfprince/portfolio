@@ -17,7 +17,7 @@ const SectionWrapper = ({ children, id, className = "" }: SectionWrapperProps) =
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.1 }}
       transition={{ duration: 0.5 }}
-      className={`py-16 md:py-24 ${className}`}
+      className={`scroll-mt-24 py-16 md:py-24 ${className}`}
     >
       <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-7xl">
         {children}

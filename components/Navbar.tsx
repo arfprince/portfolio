@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
+import { personalInfo } from '@/lib/data';
 
 const navItems = [
   { name: 'Home', href: '#home' },
@@ -50,12 +51,26 @@ const Navbar = () => {
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        scrolled 
-          ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-lg' 
+        (scrolled || isOpen)
+          ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-lg'
           : 'bg-transparent'
       }`}
     >
-      <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-7xl">
+      {/* Overlay for mobile menu */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            key="nav-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
+            onClick={() => setIsOpen(false)}
+          />
+        )}
+      </AnimatePresence>
+      <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-7xl relative z-50">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <Link 
@@ -77,13 +92,15 @@ const Navbar = () => {
                 {item.name}
               </a>
             ))}
-            <motion.button
+            <motion.a
+              href={personalInfo.resumeUrl}
+              download
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="px-6 py-2 bg-gradient-to-r from-primary-600 to-primary-500 text-white rounded-full font-medium shadow-lg hover:shadow-xl transition-shadow duration-200"
             >
               Download CV
-            </motion.button>
+            </motion.a>
           </div>
 
           {/* Mobile Menu Button */}
@@ -103,7 +120,7 @@ const Navbar = () => {
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3 }}
-              className="md:hidden overflow-hidden"
+              className="md:hidden overflow-hidden relative"
             >
               <div className="py-4 space-y-3">
                 {navItems.map((item) => (
@@ -116,9 +133,13 @@ const Navbar = () => {
                     {item.name}
                   </a>
                 ))}
-                <button className="w-full px-4 py-2 bg-gradient-to-r from-primary-600 to-primary-500 text-white rounded-lg font-medium">
+                <a
+                  href={personalInfo.resumeUrl}
+                  download
+                  className="w-full block text-center px-4 py-2 bg-gradient-to-r from-primary-600 to-primary-500 text-white rounded-lg font-medium"
+                >
                   Download CV
-                </button>
+                </a>
               </div>
             </motion.div>
           )}

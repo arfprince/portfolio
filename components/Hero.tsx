@@ -60,7 +60,7 @@ const Hero = () => {
   ];
 
   return (
-    <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-gray-900 via-primary-900/20 to-gray-900">
+    <section id="home" className="scroll-mt-24 min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-gray-900 via-primary-900/20 to-gray-900 pt-24 md:pt-28">
       {/* Animated Background */}
       <div className="absolute inset-0 w-full h-full md:mt-4">
         <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
