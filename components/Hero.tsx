@@ -6,6 +6,7 @@ import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa';
 import { personalInfo } from '@/lib/data';
 import { useEffect, useState } from 'react';
 import { GitCommit, Star, GitFork } from 'lucide-react';
+import GithubHeatmap from '@/components/GithubHeatmap';
 
 interface GitHubStats {
   publicRepos: number;
@@ -166,6 +167,11 @@ const Hero = () => {
                     ))}
                   </div>
                 )}
+
+                {/* Contribution Heatmap */}
+                <div className="mt-4">
+                  <GithubHeatmap />
+                </div>
               </motion.div>
             )}
 
