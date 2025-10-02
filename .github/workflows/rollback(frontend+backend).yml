@@ -1,0 +1,80 @@
+name: Rollback server
+run-name: Rollback ${{ inputs.rollbackType }} with ${{ inputs.steps }} steps
+
+on:
+  workflow_dispatch:
+    inputs:
+      rollbackType:
+        description: 'Select the type of rollback'
+        type: choice
+        required: true
+        options:
+          - frontend
+          - backend
+          - both
+      steps:
+        description: 'Number of steps to rollback (default: 1, 0 for latest release)'
+        type: number
+        required: true
+        default: 1
+
+jobs:
+  build:
+    name: Build Deployment matrix
+    runs-on: ubuntu-latest
+    outputs:
+      DEPLOYMENT_MATRIX: ${{ steps.export-deployment-matrix.outputs.DEPLOYMENT_MATRIX }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Export deployment matrix
+        id: export-deployment-matrix
+        run: |
+          delimiter="$(openssl rand -hex 8)"
+          echo "DEPLOYMENT_MATRIX<<${delimiter}" >> $GITHUB_OUTPUT
+          cat ./.github/workflows/servers.json >> $GITHUB_OUTPUT
+          echo "${delimiter}" >> $GITHUB_OUTPUT
+
+  rollback:
+    name: Rollback ${{ inputs.rollbackType }} with ${{ inputs.steps }} steps
+    needs: build
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.event.inputs.rollbackType }}
+      cancel-in-progress: true
+    
+    strategy:
+      matrix:
+        server: ${{ fromJson(needs.build.outputs.DEPLOYMENT_MATRIX) }}
+
+    steps:
+      - name: Rollback
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ matrix.server.ip }}
+          username: ${{ matrix.server.username }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ matrix.server.port }}
+          script: |
+            set -e
+            echo "Starting rollback on $(hostname)"
+            
+            case "${{ inputs.rollbackType }}" in
+              "frontend")
+                cd ${{ matrix.server.path }}
+                ./rollback.sh --steps ${{ inputs.steps }}
+                ;;
+              "backend")
+                cd /home/ubuntu/super-admin-dashboard/backend
+                ./rollback.sh --steps ${{ inputs.steps }}
+                ;;
+              "both")
+                cd ${{ matrix.server.path }}
+                ./rollback.sh --steps ${{ inputs.steps }}
+                cd /home/ubuntu/super-admin-dashboard/backend
+                ./rollback.sh --steps ${{ inputs.steps }}
+                ;;
+            esac
+            
+            echo "Rollback completed on $(hostname)"

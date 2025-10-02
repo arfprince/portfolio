@@ -1,0 +1,105 @@
+name: Rollback 
+run-name: Rollback SuperAdmin Dashboard
+
+on:
+  workflow_dispatch:
+    inputs:
+      steps:
+        description: 'Number of steps to roll back'
+        required: true
+        default: '1'
+
+jobs:
+  validate:
+    name: Validate Inputs
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Check rollback steps
+        run: |
+          if ! [[ ${{ github.event.inputs.steps }} =~ ^[0-9]+$ ]]; then
+            echo "Error: Steps must be a positive number"
+            exit 1
+          fi
+          if [ ${{ github.event.inputs.steps }} -lt 1 ]; then
+            echo "Error: Must roll back at least 1 step"
+            exit 1
+          fi
+
+  build:
+    name: Build Deployment matrix
+    needs: validate
+    runs-on: ubuntu-latest
+    outputs:
+      DEPLOYMENT_MATRIX: ${{ steps.export-deployment-matrix.outputs.DEPLOYMENT_MATRIX }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Export deployment matrix
+        id: export-deployment-matrix
+        run: |
+          delimiter="$(openssl rand -hex 8)"
+          echo "DEPLOYMENT_MATRIX<<${delimiter}" >> $GITHUB_OUTPUT
+          cat ./.github/workflows/servers.json >> $GITHUB_OUTPUT
+          echo "${delimiter}" >> $GITHUB_OUTPUT
+
+
+  rollback:
+    name: Rollback with ${{ inputs.steps }} steps
+    runs-on: ubuntu-latest
+    needs: build
+    strategy:
+      matrix:
+        server: ${{ fromJson(needs.build.outputs.DEPLOYMENT_MATRIX) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Perform rollback
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+          host: ${{ matrix.server.ip }}
+          username: ${{ matrix.server.username }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ matrix.server.port }}
+          script: |
+            set -e 
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh || true
+            
+            # Get current release through readlink
+            CURRENT_RELEASE=$(basename $(readlink -f ${{ matrix.server.path }}/current))
+            echo "Current active release: $CURRENT_RELEASE"
+            
+            # Get list of releases 
+            cd ${{ matrix.server.path }}/releases
+            echo "All available releases:"
+            counter=0
+            ls -t | while read release; do
+                echo " [$(($counter + 1))] - $release"
+                counter=$((counter + 1))
+            done
+            
+            # Create array of releases excluding current one
+            RELEASES=($(ls -t | grep -v "^$CURRENT_RELEASE$"))
+            echo "Releases available for rollback (excluding current):"
+            for i in "${!RELEASES[@]}"; do
+                echo "  [$(($i + 1))] - ${RELEASES[$i]}"
+            done
+            
+            # Calculate the index (subtract 1 since array indexing starts at 0)
+            INDEX=$((${{ github.event.inputs.steps }} -1))
+            
+            ROLLBACK_RELEASE=${RELEASES[$INDEX]}
+            echo "Found release to rollback to: $ROLLBACK_RELEASE"
+            
+            # Remove existing symlink and create new one
+            rm -f ${{ matrix.server.path }}/current
+            ln -sfn "${{ matrix.server.path }}/releases/$ROLLBACK_RELEASE" "${{ matrix.server.path }}/current"
+            echo "Successfully created symlink to: $ROLLBACK_RELEASE from $CURRENT_RELEASE"
+            
+            # Restart application without reinstalling dependencies
+            pm2 reload super-admin-dashboard --update-env
+            set +e 
+            

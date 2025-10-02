@@ -1,0 +1,79 @@
+name: CI Pipeline
+run-name: CI Pipeline
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    if: github.ref == 'refs/heads/main'
+    name: Install and Build
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}
+      cancel-in-progress: true
+    outputs:
+      DEPLOYMENT_MATRIX: ${{ steps.export-deployment-matrix.outputs.DEPLOYMENT_MATRIX }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "pnpm"
+  
+      - name: Install dependencies
+        run: pnpm install --ignore-scripts
+        
+      - uses: actions/cache@v4
+        name: Setup .next cache
+        with:
+          path: ${{ github.workspace }}/.next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles( '**/*.ts', '**/*.tsx') }}
+          # If source files changed but packages didn't, rebuild from a prior cache.
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-
+            
+      - name: Build
+        run: pnpm build
+
+      - name: Create deployment artifact
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+        run: |
+          echo "Creating deployment artifact"
+          tar --exclude='.next/cache' -czf "${GITHUB_SHA}".tar.gz package.json pnpm-lock.yaml next.config.ts .next public
+          echo "Created deployment artifact"
+
+      - name: Store artifact for distribution
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-build
+          path: ${{ github.sha }}.tar.gz
+          retention-days: 1
+
+      - name: Export deployment matrix
+        id: export-deployment-matrix
+        run: |
+          delimiter="$(openssl rand -hex 8)"
+          JSON="$(cat ./.github/workflows/servers.json)"
+
+          # Filter the JSON based on the releaseType
+          FILTERED_JSON=$(echo "$JSON" | jq 'map(select(.type == "prod"))')
+          echo "DEPLOYMENT_MATRIX<<${delimiter}" >> "${GITHUB_OUTPUT}"
+          echo "$FILTERED_JSON" >> "${GITHUB_OUTPUT}"
+          echo "${delimiter}" >> "${GITHUB_OUTPUT}"
+
+  deploy:
+    needs: build
+    uses: arfprince/portfolio/.github/workflows/cd.yml@main
+    with:
+      deploymentMatrix: ${{ needs.build.outputs.DEPLOYMENT_MATRIX }}
+      artifactName: app-build
+    secrets:
+      SSH_KEY: ${{ secrets.SSH_KEY }}

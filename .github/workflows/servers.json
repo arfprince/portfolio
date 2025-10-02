@@ -1,0 +1,10 @@
+[
+  {
+    "name": "production",
+    "ip": "16.171.36.13",
+    "username": "ubuntu",
+    "port": "22",
+    "path": "/home/ubuntu/portfolio",
+    "type": "prod" 
+  }
+]
