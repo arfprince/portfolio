@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { personalInfo } from '@/lib/data';
 
-export const revalidate = 60 * 60 * 24; // cache this route for 24h
+export const revalidate = 86400; // cache this route for 24h
 
 const GQL_ENDPOINT = 'https://api.github.com/graphql';
 
@@ -55,7 +55,7 @@ export async function GET() {
       Authorization: `Bearer ${token}`,
     },
     // cache GitHub response for 24h on the server
-    next: { revalidate: 60 * 60 * 24 },
+    next: { revalidate: 86400 },
     body,
   });
 
