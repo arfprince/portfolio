@@ -77,13 +77,12 @@ jobs:
             RELEASE_PATH: ${{ matrix.server.path }}/releases/${{ github.sha }}
             ACTIVE_RELEASE_PATH: ${{ matrix.server.path }}/current
             BASE_PATH: ${{ matrix.server.path }}
-            ENV_FILE: ${{ secrets.ENV_FILE }}
           with:
             host: ${{ matrix.server.ip }}
             username: ${{ matrix.server.username }}
             key: ${{ secrets.SSH_KEY }}
             port: ${{ matrix.server.port }}
-            envs: GITHUB_SHA,RELEASE_PATH,ACTIVE_RELEASE_PATH,BASE_PATH,ENV_FILE
+            envs: GITHUB_SHA,RELEASE_PATH,ACTIVE_RELEASE_PATH,BASE_PATH
             script: |
               set -e  # Exit on any command failure
               export NVM_DIR=~/.nvm
@@ -91,7 +90,7 @@ jobs:
 
               ln -snf $RELEASE_PATH $ACTIVE_RELEASE_PATH
 
-              pm2 reload portfolio --update-env 
+              pm2 reload portfolio
 
               set +e  # Disable exit on command failure
 
