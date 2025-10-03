@@ -34,12 +34,12 @@ const Skills = () => {
       'Node.js': <FaNodeJs className="text-green-500" size={30} />,
       'Python': <FaPython className="text-blue-500" size={30} />,
       'Express.js': <SiExpress className="text-gray-600" size={30} />,
-      'PostgreSQL': <SiPostgresql className="text-blue-700" size={30} />,
+      // 'PostgreSQL': <SiPostgresql className="text-blue-700" size={30} />,
       'MongoDB': <SiMongodb className="text-green-600" size={30} />,
       'Docker': <FaDocker className="text-blue-500" size={30} />,
       'AWS': <FaAws className="text-orange-600" size={30} />,
       'Git': <FaGitAlt className="text-red-500" size={30} />,
-      'Kubernetes': <SiKubernetes className="text-blue-600" size={30} />,
+      // 'Kubernetes': <SiKubernetes className="text-blue-600" size={30} />,
       'Linux': <SiLinux className="text-black dark:text-white" size={30} />,
     };
 

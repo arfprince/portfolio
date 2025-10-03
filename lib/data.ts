@@ -31,17 +31,17 @@ export const skills: Skill[] = [
   { name: "Node.js", level: 85, category: "backend" },
   { name: "Python", level: 80, category: "backend" },
   { name: "Express.js", level: 82, category: "backend" },
-  { name: "PostgreSQL", level: 78, category: "backend" },
+  // { name: "PostgreSQL", level: 78, category: "backend" },
   { name: "MongoDB", level: 75, category: "backend" },
   { name: "REST APIs", level: 88, category: "backend" },
   
   // DevOps
   { name: "Docker", level: 75, category: "devops" },
-  { name: "AWS", level: 70, category: "devops" },
+  { name: "AWS", level: 50, category: "devops" },
   { name: "CI/CD", level: 72, category: "devops" },
   { name: "Git", level: 90, category: "devops" },
   { name: "Linux", level: 78, category: "devops" },
-  { name: "Kubernetes", level: 65, category: "devops" },
+  // { name: "Kubernetes", level: 65, category: "devops" },
 ];
 
 export const projects: Project[] = [
@@ -123,10 +123,10 @@ export const experiences: Experience[] = [
     id: "2",
     position: "Competitive Programmer",
     company: "Multiple Platforms",
-    duration: "2020 - Present",
+    duration: "2021 - Present",
     description: [
       "Active participant on Codeforces, CodeChef, AtCoder, and LeetCode",
-      "Solved 500+ algorithmic problems across various platforms",
+      "Solved 2000+ algorithmic problems across various platforms",
       "Consistently improving problem-solving and algorithmic thinking skills",
       "Participated in multiple online programming contests"
     ],

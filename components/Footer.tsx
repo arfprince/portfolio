@@ -72,9 +72,9 @@ const Footer = () => {
           <p className="text-gray-400">
             © {new Date().getFullYear()} {personalInfo.name}. All rights reserved.
           </p>
-          <p className="text-gray-500 text-sm mt-2">
+          {/* <p className="text-gray-500 text-sm mt-2">
             Built with Next.js, TypeScript, Tailwind CSS & Framer Motion
-          </p>
+          </p> */}
         </motion.div>
       </div>
     </footer>
