@@ -71,17 +71,17 @@ export default function GithubHeatmap() {
   }
 
   return (
-    <div>
+    <div className="w-full">
       <div className="flex items-center justify-between mb-2">
         <p className="text-xs text-gray-400">GitHub contributions (last year)</p>
         {typeof data.total === 'number' && (
           <p className="text-xs text-gray-400">Total: {data.total}</p>
         )}
       </div>
-      <div className="overflow-x-auto md:overflow-visible">
-        <div className="flex gap-[2px]">
+      <div className="w-full overflow-x-auto">
+        <div className="inline-flex gap-[2px] min-w-full" style={{ minWidth: 'fit-content' }}>
           {columns.map((week, wi) => (
-            <div key={wi} className="flex flex-col gap-[3px]">
+            <div key={wi} className="flex flex-col gap-[2px]">
               {week.map((d) => {
                 const paletteLight = ['#ebedf0', '#9be9a8', '#40c463', '#30a14e', '#216e39'];
                 const paletteDark = ['#161b22', '#0e4429', '#006d32', '#26a641', '#39d353'];
@@ -97,7 +97,7 @@ export default function GithubHeatmap() {
                     key={d.date}
                     title={`${d.date}: ${d.count} contributions`}
                     aria-label={`${d.date}: ${d.count} contributions`}
-                    className="h-[6px] w-[6px] md:h-[10px] md:w-[10px] rounded-[2px]"
+                    className="h-[8px] w-[8px] rounded-[2px] flex-shrink-0"
                     style={{ backgroundColor: bg, border: '1px solid rgba(0,0,0,0.1)' }}
                   />
                 );

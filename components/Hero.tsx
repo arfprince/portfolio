@@ -99,7 +99,7 @@ const Hero = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4"
+              className="text-3xl sm:text-2xl md:text-4xl lg:text-5xl font-bold text-white mb-4"
             >
               {personalInfo.name}
             </motion.h1>
@@ -123,6 +123,74 @@ const Hero = () => {
             >
               {personalInfo.bio}
             </motion.p>
+
+            {/* Profile Image - Shows here on mobile/tablet (< lg) */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8 }}
+              className="relative lg:hidden mb-8"
+            >
+              <div className="relative w-64 h-64 sm:w-80 sm:h-80 mx-auto">
+                {/* Glow Effect */}
+                <motion.div
+                  animate={{
+                    boxShadow: [
+                      '0 0 20px rgba(59, 130, 246, 0.5)',
+                      '0 0 60px rgba(59, 130, 246, 0.8)',
+                      '0 0 20px rgba(59, 130, 246, 0.5)',
+                    ],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                  }}
+                  className="absolute inset-0 rounded-full"
+                />
+                
+                {/* Image Container */}
+                <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-primary-500/30 bg-gradient-to-br from-primary-600/20 to-primary-400/20">
+                  <Image
+                    src={personalInfo.profileImage}
+                    alt={personalInfo.name}
+                    fill
+                    className="object-cover"
+                    priority
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = 'https://via.placeholder.com/400x400/1e3a8a/3b82f6?text=Profile';
+                    }}
+                  />
+                </div>
+
+                {/* Floating Elements */}
+                <motion.div
+                  animate={{
+                    y: [-10, 10, -10],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                  }}
+                  className="absolute -top-4 -right-4 w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg flex items-center justify-center text-white font-bold text-xl sm:text-2xl shadow-lg"
+                >
+                  {'</>'}
+                </motion.div>
+
+                <motion.div
+                  animate={{
+                    y: [10, -10, 10],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    delay: 1,
+                  }}
+                  className="absolute -bottom-4 -left-4 w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white shadow-lg"
+                >
+                  <Star size={20} />
+                </motion.div>
+              </div>
+            </motion.div>
 
             {/* GitHub Stats Card */}
             {githubStats && (
@@ -225,12 +293,12 @@ const Hero = () => {
             </motion.div>
           </motion.div>
 
-          {/* Right Content - Profile Image */}
+          {/* Right Content - Profile Image (Shows only on large screens >= 1024px) */}
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
-            className="relative"
+            className="relative hidden lg:block"
           >
             <div className="relative w-80 h-80 md:w-96 md:h-96 mx-auto">
               {/* Glow Effect */}
@@ -258,7 +326,6 @@ const Hero = () => {
                   className="object-cover"
                   priority
                   onError={(e) => {
-                    // Fallback if image doesn't exist
                     (e.target as HTMLImageElement).src = 'https://via.placeholder.com/400x400/1e3a8a/3b82f6?text=Profile';
                   }}
                 />

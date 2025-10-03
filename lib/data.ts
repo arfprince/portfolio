@@ -85,24 +85,24 @@ export const projects: Project[] = [
     githubUrl: "https://github.com/arfprince/portfolio",
     category: "frontend"
   },
-  {
-    id: "5",
-    title: "Competitive Programming Solutions",
-    description: "A collection of my solutions to various competitive programming problems from platforms like Codeforces, CodeChef, AtCoder, and LeetCode.",
-    image: "/assets/project5.jpg",
-    technologies: ["C++", "Python", "Algorithms", "Data Structures"],
-    githubUrl: "https://github.com/arfprince",
-    category: "backend"
-  },
-  {
-    id: "6",
-    title: "Web Development Projects",
-    description: "Various web development projects showcasing different technologies and frameworks, from simple static sites to complex web applications.",
-    image: "/assets/project6.jpg",
-    technologies: ["React", "Node.js", "Express", "MongoDB"],
-    githubUrl: "https://github.com/arfprince",
-    category: "fullstack"
-  }
+  // {
+  //   id: "5",
+  //   title: "Competitive Programming Solutions",
+  //   description: "A collection of my solutions to various competitive programming problems from platforms like Codeforces, CodeChef, AtCoder, and LeetCode.",
+  //   image: "/assets/project5.jpg",
+  //   technologies: ["C++", "Python", "Algorithms", "Data Structures"],
+  //   githubUrl: "https://github.com/arfprince",
+  //   category: "backend"
+  // },
+  // {
+  //   id: "6",
+  //   title: "Web Development Projects",
+  //   description: "Various web development projects showcasing different technologies and frameworks, from simple static sites to complex web applications.",
+  //   image: "/assets/project6.jpg",
+  //   technologies: ["React", "Node.js", "Express", "MongoDB"],
+  //   githubUrl: "https://github.com/arfprince",
+  //   category: "fullstack"
+  // }
 ];
 
 export const experiences: Experience[] = [
