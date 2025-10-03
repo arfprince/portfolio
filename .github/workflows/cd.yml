@@ -89,6 +89,10 @@ jobs:
               source ~/.nvm/nvm.sh || true
 
               ln -snf $RELEASE_PATH $ACTIVE_RELEASE_PATH
+              echo "Linked release into current release"
+
+              ln -snf $BASE_PATH/.env.local $ACTIVE_RELEASE_PATH/.env.local
+              echo "Linked .env.local into current release"
 
               pm2 reload portfolio
 
