@@ -32,17 +32,13 @@ const Navbar = () => {
     e.preventDefault();
     setIsOpen(false);
     
-    const element = document.querySelector(href);
-    if (element) {
-      const offset = 80; // Height of navbar
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - offset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-    }
+    // Small delay to ensure mobile menu closes before scrolling
+    setTimeout(() => {
+      const element = document.querySelector(href);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
   };
 
   return (
