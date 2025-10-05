@@ -24,17 +24,15 @@ const Contact = () => {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus('idle');
-
     try {
       // Send email using EmailJS
       await emailjs.send(
         'service_1bi7evh',
         'template_c1ztwnf',
         {
-          from_name: formData.name,
-          from_email: formData.email,
+          name: formData.name,
+          email: formData.email,
           message: formData.message,
-          to_name: personalInfo.name,
         },
         '-kbv8BZvWkiCvz539'
       );
@@ -256,7 +254,7 @@ const Contact = () => {
                   disabled={isSubmitting}
                   whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
                   whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
-                  className="w-full px-6 py-3 bg-gradient-to-r from-primary-600 to-primary-500 text-white rounded-lg font-medium shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="w-full px-6 py-3 bg-gradient-to-r from-primary-600 to-primary-500 text-white rounded-lg font-medium shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
                 >
                   {isSubmitting ? (
                     <>
@@ -274,23 +272,54 @@ const Contact = () => {
                 {/* Status Messages */}
                 {submitStatus === 'success' && (
                   <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="flex items-center gap-2 text-green-600 dark:text-green-400"
+                    initial={{ opacity: 0, scale: 0.8, y: 10 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    className="bg-green-50 dark:bg-green-900/20 border-2 border-green-500 rounded-lg p-4"
                   >
-                    <CheckCircle size={20} />
-                    <span>Message sent successfully!</span>
+                    <div className="flex items-center gap-3">
+                      <motion.div
+                        initial={{ scale: 0, rotate: -180 }}
+                        animate={{ scale: 1, rotate: 0 }}
+                        transition={{ 
+                          type: "spring", 
+                          stiffness: 200, 
+                          damping: 15,
+                          delay: 0.1 
+                        }}
+                      >
+                        <CheckCircle size={24} className="text-green-600 dark:text-green-400" />
+                      </motion.div>
+                      <div>
+                        <h4 className="font-semibold text-green-800 dark:text-green-300">
+                          Thank You!
+                        </h4>
+                        <p className="text-sm text-green-700 dark:text-green-400">
+                          Your message has been sent successfully. I'll get back to you soon!
+                        </p>
+                      </div>
+                    </div>
                   </motion.div>
                 )}
 
                 {submitStatus === 'error' && (
                   <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="flex items-center gap-2 text-red-600 dark:text-red-400"
+                    initial={{ opacity: 0, scale: 0.8, y: 10 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    className="bg-red-50 dark:bg-red-900/20 border-2 border-red-500 rounded-lg p-4"
                   >
-                    <AlertCircle size={20} />
-                    <span>Failed to send message. Please try again.</span>
+                    <div className="flex items-center gap-3">
+                      <AlertCircle size={24} className="text-red-600 dark:text-red-400" />
+                      <div>
+                        <h4 className="font-semibold text-red-800 dark:text-red-300">
+                          Oops! Something went wrong
+                        </h4>
+                        <p className="text-sm text-red-700 dark:text-red-400">
+                          Failed to send message. Please try again or contact me directly.
+                        </p>
+                      </div>
+                    </div>
                   </motion.div>
                 )}
               </form>
