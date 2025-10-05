@@ -26,27 +26,18 @@ const Contact = () => {
     setSubmitStatus('idle');
 
     try {
-      // Initialize EmailJS (you'll need to replace these with your actual IDs)
-      // emailjs.init("YOUR_PUBLIC_KEY");
-      
-      // For demo purposes, we'll simulate a successful submission
-      // In production, uncomment the following and add your EmailJS credentials:
-      /*
+      // Send email using EmailJS
       await emailjs.send(
-        'YOUR_SERVICE_ID',
-        'YOUR_TEMPLATE_ID',
+        'service_1bi7evh',
+        'template_c1ztwnf',
         {
           from_name: formData.name,
           from_email: formData.email,
           message: formData.message,
           to_name: personalInfo.name,
         },
-        'YOUR_PUBLIC_KEY'
+        '-kbv8BZvWkiCvz539'
       );
-      */
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
       
       setSubmitStatus('success');
       setFormData({ name: '', email: '', message: '' });
@@ -274,7 +265,7 @@ const Contact = () => {
                     </>
                   ) : (
                     <>
-                      <Send size={20} />
+                      <Send size={20} className='hover:click-effect' />
                       Send Message
                     </>
                   )}
