@@ -82,22 +82,36 @@ const Projects = () => {
             ))}
           </div>
 
+          {/* Debug Info - Remove this after testing */}
+          <div className="text-center mb-4 text-sm text-gray-500">
+            Current filter: {filter} | Projects found: {filteredProjects.length}
+          </div>
+
           {/* Projects Grid */}
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
-          >
-            {filteredProjects.map((project) => (
+          {filteredProjects.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-gray-600 dark:text-gray-400 text-lg">
+                No projects found in the "{categories.find(cat => cat.id === filter)?.name}" category.
+              </p>
+            </div>
+          ) : (
+            <AnimatePresence mode="wait">
               <motion.div
-                key={project.id}
-                variants={itemVariants}
-                whileHover={{ y: -10 }}
-                className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer group"
-                onClick={() => setSelectedProject(project)}
+                key={filter}
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
               >
+                {filteredProjects.map((project) => (
+                <motion.div
+                  key={project.id}
+                  variants={itemVariants}
+                  whileHover={{ y: -10 }}
+                  className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer group"
+                  onClick={() => setSelectedProject(project)}
+                >
                 {/* Project Image */}
                 <div className="relative h-48 overflow-hidden bg-gradient-to-br from-primary-100 to-primary-200 dark:from-primary-900 dark:to-primary-800">
                   <Image
@@ -170,9 +184,11 @@ const Projects = () => {
                     )}
                   </div>
                 </div>
+                  </motion.div>
+                ))}
               </motion.div>
-            ))}
-          </motion.div>
+            </AnimatePresence>
+          )}
         </motion.div>
       </SectionWrapper>
 
