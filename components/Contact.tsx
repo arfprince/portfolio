@@ -26,7 +26,7 @@ const Contact = () => {
     setSubmitStatus('idle');
     try {
       await fetch(
-      "https://3f0wapam1c.execute-api.eu-north-1.amazonaws.com/prod/contact",
+      "https://3f0wapam1c.execute-api.eu-north-1.amazonaws.com/prod",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
