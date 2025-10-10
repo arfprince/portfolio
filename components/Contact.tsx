@@ -25,17 +25,18 @@ const Contact = () => {
     setIsSubmitting(true);
     setSubmitStatus('idle');
     try {
-      // Send email using EmailJS
-      await emailjs.send(
-        'service_1bi7evh',
-        'template_c1ztwnf',
+      await fetch(
+      "https://3f0wapam1c.execute-api.eu-north-1.amazonaws.com/prod/contact",
         {
-          name: formData.name,
-          email: formData.email,
-          message: formData.message,
-        },
-        '-kbv8BZvWkiCvz539'
-      );
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: formData.name,
+            email: formData.email,
+            message: formData.message,
+          })
+        }
+      )
       
       setSubmitStatus('success');
       setFormData({ name: '', email: '', message: '' });
