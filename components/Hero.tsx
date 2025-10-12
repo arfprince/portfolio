@@ -245,7 +245,7 @@ const Hero = () => {
             )}
 
             {/* CTA Buttons */}
-            <motion.div
+            {/* <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8 }}
@@ -266,10 +266,10 @@ const Hero = () => {
               >
                 Contact Me
               </motion.a>
-            </motion.div>
+            </motion.div> */}
 
             {/* Social Links */}
-            <motion.div
+            {/* <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.9 }}
@@ -291,7 +291,7 @@ const Hero = () => {
                   </motion.a>
                 );
               })}
-            </motion.div>
+            </motion.div> */}
           </motion.div>
 
           {/* Right Content - Profile Image (Shows only on large screens >= 1024px) */}
