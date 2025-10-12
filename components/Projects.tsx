@@ -1,27 +1,28 @@
-'use client';
+"use client";
 
-import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
-import Image from 'next/image';
-import SectionWrapper from './SectionWrapper';
-import { projects } from '@/lib/data';
-import { Project } from '@/types';
-import { ExternalLink, Github, X, Code2, Eye } from 'lucide-react';
+import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
+import Image from "next/image";
+import SectionWrapper from "./SectionWrapper";
+import { projects } from "@/lib/data";
+import { Project } from "@/types";
+import { ExternalLink, Github, X, Code2, Eye } from "lucide-react";
 
 const Projects = () => {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const [filter, setFilter] = useState<string>('all');
+  const [filter, setFilter] = useState<string>("all");
 
   const categories = [
-    { id: 'all', name: 'All Projects' },
-    { id: 'frontend', name: 'Frontend' },
-    { id: 'backend', name: 'Backend' },
-    { id: 'fullstack', name: 'Full Stack' },
+    { id: "all", name: "All Projects" },
+    { id: "frontend", name: "Frontend" },
+    { id: "backend", name: "Backend" },
+    { id: "fullstack", name: "Full Stack" },
   ];
 
-  const filteredProjects = filter === 'all' 
-    ? projects 
-    : projects.filter(project => project.category === filter);
+  const filteredProjects =
+    filter === "all"
+      ? projects
+      : projects.filter((project) => project.category === filter);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -46,7 +47,10 @@ const Projects = () => {
 
   return (
     <>
-      <SectionWrapper id="projects" className="bg-gray-50 dark:bg-gray-900/50">
+      <SectionWrapper
+        id="projects"
+        className="bg-white dark:bg-gray-900/50 transition-colors duration-300"
+      >
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -73,8 +77,8 @@ const Projects = () => {
                 onClick={() => setFilter(category.id)}
                 className={`px-6 py-2 rounded-full font-medium transition-all duration-200 ${
                   filter === category.id
-                    ? 'bg-primary-600 text-white shadow-lg'
-                    : 'bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-700'
+                    ? "bg-blue-500 text-white shadow-lg"
+                    : "bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-700"
                 }`}
               >
                 {category.name}
@@ -82,16 +86,12 @@ const Projects = () => {
             ))}
           </div>
 
-          {/* Debug Info - Remove this after testing */}
-          <div className="text-center mb-4 text-sm text-gray-500">
-            Current filter: {filter} | Projects found: {filteredProjects.length}
-          </div>
-
           {/* Projects Grid */}
           {filteredProjects.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-gray-600 dark:text-gray-400 text-lg">
-                No projects found in the "{categories.find(cat => cat.id === filter)?.name}" category.
+                No projects found in the "
+                {categories.find((cat) => cat.id === filter)?.name}" category.
               </p>
             </div>
           ) : (
@@ -105,85 +105,85 @@ const Projects = () => {
                 className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
               >
                 {filteredProjects.map((project) => (
-                <motion.div
-                  key={project.id}
-                  variants={itemVariants}
-                  whileHover={{ y: -10 }}
-                  className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer group"
-                  onClick={() => setSelectedProject(project)}
-                >
-                {/* Project Image */}
-                <div className="relative h-48 overflow-hidden bg-gradient-to-br from-primary-100 to-primary-200 dark:from-primary-900 dark:to-primary-800">
-                  <Image
-                    src={project.image}
-                    alt={project.title}
-                    fill
-                    className="object-cover group-hover:scale-110 transition-transform duration-300"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).style.display = 'none';
-                    }}
-                  />
-                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <Eye className="text-white" size={40} />
-                  </div>
-                </div>
+                  <motion.div
+                    key={project.id}
+                    variants={itemVariants}
+                    whileHover={{ y: -10 }}
+                    className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer group"
+                    onClick={() => setSelectedProject(project)}
+                  >
+                    {/* Project Image */}
+                    <div className="relative h-48 overflow-hidden bg-gradient-to-br from-primary-100 to-primary-200 dark:from-primary-900 dark:to-primary-800">
+                      <Image
+                        src={project.image}
+                        alt={project.title}
+                        fill
+                        className="object-cover group-hover:scale-110 transition-transform duration-300"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).style.display = "none";
+                        }}
+                      />
+                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <Eye className="text-white" size={40} />
+                      </div>
+                    </div>
 
-                {/* Project Info */}
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">
-                    {project.title}
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">
-                    {project.description}
-                  </p>
+                    {/* Project Info */}
+                    <div className="p-6">
+                      <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">
+                        {project.title}
+                      </h3>
+                      <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">
+                        {project.description}
+                      </p>
 
-                  {/* Technologies */}
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {project.technologies.slice(0, 3).map((tech) => (
-                      <span
-                        key={tech}
-                        className="px-3 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 text-xs rounded-full"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                    {project.technologies.length > 3 && (
-                      <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 text-xs rounded-full">
-                        +{project.technologies.length - 3} more
-                      </span>
-                    )}
-                  </div>
+                      {/* Technologies */}
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {project.technologies.slice(0, 3).map((tech) => (
+                          <span
+                            key={tech}
+                            className="px-3 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 text-xs rounded-full"
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                        {project.technologies.length > 3 && (
+                          <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 text-xs rounded-full">
+                            +{project.technologies.length - 3} more
+                          </span>
+                        )}
+                      </div>
 
-                  {/* Links */}
-                  <div className="flex gap-4">
-                    {project.githubUrl && (
-                      <motion.a
-                        href={project.githubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
-                      >
-                        <Github size={20} />
-                      </motion.a>
-                    )}
-                    {project.liveUrl && (
-                      <motion.a
-                        href={project.liveUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
-                      >
-                        <ExternalLink size={20} />
-                      </motion.a>
-                    )}
-                  </div>
-                </div>
+                      {/* Links */}
+                      <div className="flex gap-4">
+                        {project.githubUrl && (
+                          <motion.a
+                            href={project.githubUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                          >
+                            <Github size={20} />
+                          </motion.a>
+                        )}
+                        {project.liveUrl && (
+                          <motion.a
+                            href={project.liveUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                          >
+                            <ExternalLink size={20} />
+                          </motion.a>
+                        )}
+                      </div>
+                    </div>
                   </motion.div>
                 ))}
               </motion.div>
@@ -217,7 +217,7 @@ const Projects = () => {
                   fill
                   className="object-cover"
                   onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = 'none';
+                    (e.target as HTMLImageElement).style.display = "none";
                   }}
                 />
                 <button
@@ -237,10 +237,12 @@ const Projects = () => {
                     </h3>
                     <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                       <Code2 size={16} />
-                      <span className="capitalize">{selectedProject.category}</span>
+                      <span className="capitalize">
+                        {selectedProject.category}
+                      </span>
                     </div>
                   </div>
-                  
+
                   <div className="flex gap-3">
                     {selectedProject.githubUrl && (
                       <motion.a

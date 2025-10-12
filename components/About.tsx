@@ -28,7 +28,7 @@ const About = () => {
   };
 
   return (
-    <SectionWrapper id="about" className="bg-gray-50 dark:bg-gray-900/50">
+    <SectionWrapper id="about" className="bg-gray-50 dark:bg-gray-900/50 transition-colors duration-300">
       <motion.div
         variants={containerVariants}
         initial="hidden"
@@ -59,7 +59,7 @@ const About = () => {
               </div>
               <div className="flex items-center gap-3 text-gray-600 dark:text-gray-400">
                 <Mail className="text-primary-600" size={20} />
-                <a href={`mailto:${personalInfo.email}`} className="hover:text-primary-600 transition-colors">
+                <a href={`mailto:${personalInfo.email}`} className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
                   {personalInfo.email}
                 </a>
               </div>

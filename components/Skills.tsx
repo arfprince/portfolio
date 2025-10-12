@@ -1,54 +1,73 @@
-'use client';
+"use client";
 import { ReactElement } from "react";
-import { motion } from 'framer-motion';
-import { useState } from 'react';
-import SectionWrapper from './SectionWrapper';
-import { skills } from '@/lib/data';
-import { 
-  FaReact, FaNodeJs, FaPython, FaDocker, FaAws, FaGitAlt,
-  FaHtml5, FaCss3Alt, FaJs, FaDatabase
-} from 'react-icons/fa';
-import { 
-  SiTypescript, SiNextdotjs, SiTailwindcss, SiMongodb, 
-  SiPostgresql, SiExpress, SiKubernetes, SiLinux
-} from 'react-icons/si';
+import { motion } from "framer-motion";
+import { useState } from "react";
+import SectionWrapper from "./SectionWrapper";
+import { skills } from "@/lib/data";
+import {
+  FaReact,
+  FaNodeJs,
+  FaPython,
+  FaDocker,
+  FaAws,
+  FaGitAlt,
+  FaHtml5,
+  FaCss3Alt,
+  FaJs,
+  FaDatabase,
+} from "react-icons/fa";
+import {
+  SiTypescript,
+  SiNextdotjs,
+  SiTailwindcss,
+  SiMongodb,
+  SiPostgresql,
+  SiExpress,
+  SiKubernetes,
+  SiLinux,
+} from "react-icons/si";
 
 const Skills = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
   const categories = [
-    { id: 'all', name: 'All Skills' },
-    { id: 'frontend', name: 'Frontend' },
-    { id: 'backend', name: 'Backend' },
-    { id: 'devops', name: 'DevOps' },
+    { id: "all", name: "All Skills" },
+    { id: "frontend", name: "Frontend" },
+    { id: "backend", name: "Backend" },
+    { id: "devops", name: "DevOps" },
   ];
 
   const getIcon = (skillName: string) => {
     const iconMap: { [key: string]: ReactElement } = {
-      'React': <FaReact className="text-cyan-500" size={30} />,
-      'Next.js': <SiNextdotjs className="text-black dark:text-white" size={30} />,
-      'TypeScript': <SiTypescript className="text-blue-600" size={30} />,
-      'Tailwind CSS': <SiTailwindcss className="text-cyan-400" size={30} />,
-      'JavaScript': <FaJs className="text-yellow-500" size={30} />,
-      'HTML/CSS': <FaHtml5 className="text-orange-500" size={30} />,
-      'Node.js': <FaNodeJs className="text-green-500" size={30} />,
-      'Python': <FaPython className="text-blue-500" size={30} />,
-      'Express.js': <SiExpress className="text-gray-600" size={30} />,
+      React: <FaReact className="text-cyan-500" size={30} />,
+      "Next.js": (
+        <SiNextdotjs className="text-black dark:text-white" size={30} />
+      ),
+      TypeScript: <SiTypescript className="text-blue-600" size={30} />,
+      "Tailwind CSS": <SiTailwindcss className="text-cyan-400" size={30} />,
+      JavaScript: <FaJs className="text-yellow-500" size={30} />,
+      "HTML/CSS": <FaHtml5 className="text-orange-500" size={30} />,
+      "Node.js": <FaNodeJs className="text-green-500" size={30} />,
+      Python: <FaPython className="text-blue-500" size={30} />,
+      "Express.js": <SiExpress className="text-gray-600" size={30} />,
       // 'PostgreSQL': <SiPostgresql className="text-blue-700" size={30} />,
-      'MongoDB': <SiMongodb className="text-green-600" size={30} />,
-      'Docker': <FaDocker className="text-blue-500" size={30} />,
-      'AWS': <FaAws className="text-orange-600" size={30} />,
-      'Git': <FaGitAlt className="text-red-500" size={30} />,
+      MongoDB: <SiMongodb className="text-green-600" size={30} />,
+      Docker: <FaDocker className="text-blue-500" size={30} />,
+      AWS: <FaAws className="text-orange-600" size={30} />,
+      Git: <FaGitAlt className="text-red-500" size={30} />,
       // 'Kubernetes': <SiKubernetes className="text-blue-600" size={30} />,
-      'Linux': <SiLinux className="text-black dark:text-white" size={30} />,
+      Linux: <SiLinux className="text-black dark:text-white" size={30} />,
     };
 
-    return iconMap[skillName] || <FaDatabase className="text-gray-500" size={30} />;
+    return (
+      iconMap[skillName] || <FaDatabase className="text-gray-500" size={30} />
+    );
   };
 
-  const filteredSkills = selectedCategory === 'all' 
-    ? skills 
-    : skills.filter(skill => skill.category === selectedCategory);
+  const filteredSkills =
+    selectedCategory === "all"
+      ? skills
+      : skills.filter((skill) => skill.category === selectedCategory);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -72,7 +91,7 @@ const Skills = () => {
   };
 
   return (
-    <SectionWrapper id="skills">
+    <SectionWrapper id="skills" className="transition-colors duration-300">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -99,8 +118,8 @@ const Skills = () => {
               onClick={() => setSelectedCategory(category.id)}
               className={`px-6 py-2 rounded-full font-medium transition-all duration-200 ${
                 selectedCategory === category.id
-                  ? 'bg-primary-600 text-white shadow-lg'
-                  : 'bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-700'
+                  ? "bg-blue-500 text-white shadow-lg"
+                  : "bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-700"
               }`}
             >
               {category.name}
@@ -121,9 +140,9 @@ const Skills = () => {
             <motion.div
               key={`${selectedCategory}-${skill.name}`}
               variants={itemVariants}
-              whileHover={{ 
+              whileHover={{
                 scale: 1.05,
-                boxShadow: '0 10px 30px rgba(0,0,0,0.2)'
+                boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
               }}
               className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md hover:shadow-xl transition-all duration-300"
             >
@@ -146,8 +165,12 @@ const Skills = () => {
                 {/* Progress Bar */}
                 <div className="w-full">
                   <div className="flex justify-between mb-1">
-                    <span className="text-xs text-gray-500 dark:text-gray-400">Proficiency</span>
-                    <span className="text-xs text-primary-600 font-semibold">{skill.level}%</span>
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                      Proficiency
+                    </span>
+                    <span className="text-xs text-primary-600 font-semibold">
+                      {skill.level}%
+                    </span>
                   </div>
                   <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
                     <motion.div
@@ -155,10 +178,10 @@ const Skills = () => {
                       initial={{ width: 0 }}
                       whileInView={{ width: `${skill.level}%` }}
                       viewport={{ once: true }}
-                      transition={{ 
-                        duration: 1.5, 
+                      transition={{
+                        duration: 1.5,
                         delay: index * 0.1,
-                        ease: "easeOut"
+                        ease: "easeOut",
                       }}
                       className="h-full bg-gradient-to-r from-primary-500 to-primary-600 rounded-full"
                     />

@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
-import Link from 'next/link';
-import { personalInfo } from '@/lib/data';
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Menu, X } from "lucide-react";
+import Link from "next/link";
+import { personalInfo } from "@/lib/data";
 
 const navItems = [
-  { name: 'Home', href: '#home' },
-  { name: 'About', href: '#about' },
-  { name: 'Skills', href: '#skills' },
-  { name: 'Projects', href: '#projects' },
-  { name: 'Resume', href: '#resume' },
-  { name: 'Contact', href: '#contact' },
+  { name: "Home", href: "#home" },
+  { name: "About", href: "#about" },
+  { name: "Skills", href: "#skills" },
+  { name: "Projects", href: "#projects" },
+  { name: "Resume", href: "#resume" },
+  { name: "Contact", href: "#contact" },
 ];
 
 const Navbar = () => {
@@ -24,19 +24,22 @@ const Navbar = () => {
       setScrolled(window.scrollY > 20);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+  const handleClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    href: string
+  ) => {
     e.preventDefault();
     setIsOpen(false);
-    
+
     // Small delay to ensure mobile menu closes before scrolling
     setTimeout(() => {
       const element = document.querySelector(href);
       if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        element.scrollIntoView({ behavior: "smooth", block: "start" });
       }
     }, 100);
   };
@@ -47,9 +50,9 @@ const Navbar = () => {
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        (scrolled || isOpen)
-          ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-lg'
-          : 'bg-transparent'
+        scrolled || isOpen
+          ? "bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-lg"
+          : "bg-transparent"
       }`}
     >
       {/* Overlay for mobile menu */}
@@ -69,15 +72,15 @@ const Navbar = () => {
       <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-7xl relative z-50">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <Link 
-            href="/" 
+          <Link
+            href="/"
             className="text-2xl font-bold bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent"
           >
             Portfolio
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-6">
             {navItems.map((item) => (
               <a
                 key={item.name}
@@ -93,7 +96,15 @@ const Navbar = () => {
               download
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="px-6 py-2 bg-gradient-to-r from-primary-600 to-primary-500 text-white rounded-full font-medium shadow-lg hover:shadow-xl transition-shadow duration-200"
+              className="
+                px-6 py-2
+                bg-blue-500 text-white shadow-lg
+                hover:bg-blue-700
+                dark:bg-primary-600 dark:hover:bg-primary-700
+                rounded-full font-medium
+                transition-all duration-200
+                inline-flex items-center justify-center
+              "
             >
               Download CV
             </motion.a>
@@ -113,7 +124,7 @@ const Navbar = () => {
           {isOpen && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
+              animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3 }}
               className="md:hidden overflow-hidden relative"
@@ -132,7 +143,7 @@ const Navbar = () => {
                 <a
                   href={personalInfo.resumeUrl}
                   download
-                  className="w-full block text-center px-4 py-2 bg-gradient-to-r from-primary-600 to-primary-500 text-white rounded-lg font-medium"
+                  className="w-full block text-center px-4 py-2 bg-gradient-to-r from-primary-600 to-primary-500 text-white! rounded-lg font-medium"
                 >
                   Download CV
                 </a>

@@ -1,32 +1,40 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { useState, FormEvent } from 'react';
-import emailjs from '@emailjs/browser';
-import SectionWrapper from './SectionWrapper';
-import { personalInfo } from '@/lib/data';
-import { 
-  Mail, Phone, MapPin, Send, CheckCircle, 
-  AlertCircle, Loader2, MessageSquare
-} from 'lucide-react';
-import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa';
+import { motion } from "framer-motion";
+import { useState, FormEvent } from "react";
+import emailjs from "@emailjs/browser";
+import SectionWrapper from "./SectionWrapper";
+import { personalInfo } from "@/lib/data";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Send,
+  CheckCircle,
+  AlertCircle,
+  Loader2,
+  MessageSquare,
+} from "lucide-react";
+import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: '',
+    name: "",
+    email: "",
+    message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [submitStatus, setSubmitStatus] = useState<
+    "idle" | "success" | "error"
+  >("idle");
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setSubmitStatus('idle');
+    setSubmitStatus("idle");
     try {
       await fetch(
-      "https://3f0wapam1c.execute-api.eu-north-1.amazonaws.com/prod",
+        "https://3f0wapam1c.execute-api.eu-north-1.amazonaws.com/prod",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -34,21 +42,23 @@ const Contact = () => {
             name: formData.name,
             email: formData.email,
             message: formData.message,
-          })
+          }),
         }
-      )
-      
-      setSubmitStatus('success');
-      setFormData({ name: '', email: '', message: '' });
+      );
+
+      setSubmitStatus("success");
+      setFormData({ name: "", email: "", message: "" });
     } catch (error) {
-      console.error('Failed to send email:', error);
-      setSubmitStatus('error');
+      console.error("Failed to send email:", error);
+      setSubmitStatus("error");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -56,7 +66,10 @@ const Contact = () => {
   };
 
   return (
-    <SectionWrapper id="contact" className="bg-gray-50 dark:bg-gray-900/50">
+    <SectionWrapper
+      id="contact"
+      className="bg-gray-50 dark:bg-gray-900/50 transition-colors duration-300"
+    >
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -69,7 +82,8 @@ const Contact = () => {
             Get In <span className="text-primary-600">Touch</span>
           </h2>
           <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Have a project in mind or want to collaborate? Feel free to reach out!
+            Have a project in mind or want to collaborate? Feel free to reach
+            out!
           </p>
         </div>
 
@@ -85,8 +99,8 @@ const Contact = () => {
               Let's Connect
             </h3>
             <p className="text-gray-600 dark:text-gray-400 mb-8">
-              I'm always open to discussing new opportunities, creative ideas, or 
-              partnerships. Don't hesitate to get in touch!
+              I'm always open to discussing new opportunities, creative ideas,
+              or partnerships. Don't hesitate to get in touch!
             </p>
 
             {/* Contact Details */}
@@ -99,10 +113,12 @@ const Contact = () => {
                   <Mail className="text-primary-600" size={20} />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Email</p>
-                  <a 
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    Email
+                  </p>
+                  <a
                     href={`mailto:${personalInfo.email}`}
-                    className="text-gray-800 dark:text-gray-200 hover:text-primary-600 transition-colors"
+                    className="text-gray-800 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                   >
                     {personalInfo.email}
                   </a>
@@ -117,8 +133,12 @@ const Contact = () => {
                   <Phone className="text-primary-600" size={20} />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Phone</p>
-                  <p className="text-gray-800 dark:text-gray-200">{personalInfo.phone}</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    Phone
+                  </p>
+                  <p className="text-gray-800 dark:text-gray-200">
+                    {personalInfo.phone}
+                  </p>
                 </div>
               </motion.div>
 
@@ -130,8 +150,12 @@ const Contact = () => {
                   <MapPin className="text-primary-600" size={20} />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Location</p>
-                  <p className="text-gray-800 dark:text-gray-200">{personalInfo.location}</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    Location
+                  </p>
+                  <p className="text-gray-800 dark:text-gray-200">
+                    {personalInfo.location}
+                  </p>
                 </div>
               </motion.div>
             </div>
@@ -193,8 +217,8 @@ const Contact = () => {
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                  <label 
-                    htmlFor="name" 
+                  <label
+                    htmlFor="name"
                     className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
                   >
                     Your Name
@@ -212,8 +236,8 @@ const Contact = () => {
                 </div>
 
                 <div>
-                  <label 
-                    htmlFor="email" 
+                  <label
+                    htmlFor="email"
                     className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
                   >
                     Email Address
@@ -231,8 +255,8 @@ const Contact = () => {
                 </div>
 
                 <div>
-                  <label 
-                    htmlFor="message" 
+                  <label
+                    htmlFor="message"
                     className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
                   >
                     Your Message
@@ -255,8 +279,17 @@ const Contact = () => {
                   disabled={isSubmitting}
                   whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
                   whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
-                  className="w-full px-6 py-3 bg-gradient-to-r from-primary-600 to-primary-500 text-white rounded-lg font-medium shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
-                >
+                  className="
+                    w-full px-6 py-3
+                    bg-blue-500 text-white shadow-lg
+                    hover:bg-blue-700
+                    dark:bg-primary-600 dark:hover:bg-primary-700
+                    rounded-lg font-medium
+                    transition-all duration-200
+                    disabled:opacity-50 disabled:cursor-not-allowed
+                    flex items-center justify-center gap-2 cursor-pointer
+                  "
+                  >
                   {isSubmitting ? (
                     <>
                       <Loader2 className="animate-spin" size={20} />
@@ -264,14 +297,14 @@ const Contact = () => {
                     </>
                   ) : (
                     <>
-                      <Send size={20} className='hover:click-effect' />
+                      <Send size={20} className="hover:click-effect" />
                       Send Message
                     </>
                   )}
                 </motion.button>
 
                 {/* Status Messages */}
-                {submitStatus === 'success' && (
+                {submitStatus === "success" && (
                   <motion.div
                     initial={{ opacity: 0, scale: 0.8, y: 10 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -282,28 +315,32 @@ const Contact = () => {
                       <motion.div
                         initial={{ scale: 0, rotate: -180 }}
                         animate={{ scale: 1, rotate: 0 }}
-                        transition={{ 
-                          type: "spring", 
-                          stiffness: 200, 
+                        transition={{
+                          type: "spring",
+                          stiffness: 200,
                           damping: 15,
-                          delay: 0.1 
+                          delay: 0.1,
                         }}
                       >
-                        <CheckCircle size={24} className="text-green-600 dark:text-green-400" />
+                        <CheckCircle
+                          size={24}
+                          className="text-green-600 dark:text-green-400"
+                        />
                       </motion.div>
                       <div>
                         <h4 className="font-semibold text-green-800 dark:text-green-300">
                           Thank You!
                         </h4>
                         <p className="text-sm text-green-700 dark:text-green-400">
-                          Your message has been sent successfully. I'll get back to you soon!
+                          Your message has been sent successfully. I'll get back
+                          to you soon!
                         </p>
                       </div>
                     </div>
                   </motion.div>
                 )}
 
-                {submitStatus === 'error' && (
+                {submitStatus === "error" && (
                   <motion.div
                     initial={{ opacity: 0, scale: 0.8, y: 10 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -311,13 +348,17 @@ const Contact = () => {
                     className="bg-red-50 dark:bg-red-900/20 border-2 border-red-500 rounded-lg p-4"
                   >
                     <div className="flex items-center gap-3">
-                      <AlertCircle size={24} className="text-red-600 dark:text-red-400" />
+                      <AlertCircle
+                        size={24}
+                        className="text-red-600 dark:text-red-400"
+                      />
                       <div>
                         <h4 className="font-semibold text-red-800 dark:text-red-300">
                           Oops! Something went wrong
                         </h4>
                         <p className="text-sm text-red-700 dark:text-red-400">
-                          Failed to send message. Please try again or contact me directly.
+                          Failed to send message. Please try again or contact me
+                          directly.
                         </p>
                       </div>
                     </div>

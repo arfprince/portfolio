@@ -1,21 +1,21 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import SectionWrapper from './SectionWrapper';
-import { personalInfo, experiences } from '@/lib/data';
-import { Download, FileText, Briefcase, Calendar } from 'lucide-react';
+import { motion } from "framer-motion";
+import SectionWrapper from "./SectionWrapper";
+import { personalInfo, experiences } from "@/lib/data";
+import { Download, FileText, Briefcase, Calendar } from "lucide-react";
 
 const Resume = () => {
   const handleDownload = () => {
     // Create a link element and trigger download
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = personalInfo.resumeUrl;
-    link.download = 'resume.pdf';
+    link.download = "resume.pdf";
     link.click();
   };
 
   return (
-    <SectionWrapper id="resume">
+    <SectionWrapper id="resume" className="transition-colors duration-300">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -45,7 +45,9 @@ const Resume = () => {
             <div className="bg-gradient-to-r from-primary-600 to-primary-500 p-8 text-white">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-3xl font-bold mb-2">{personalInfo.name}</h3>
+                  <h3 className="text-3xl font-bold mb-2">
+                    {personalInfo.name}
+                  </h3>
                   <p className="text-xl opacity-90">{personalInfo.title}</p>
                 </div>
                 <motion.div
@@ -65,7 +67,7 @@ const Resume = () => {
                   <Briefcase className="text-primary-600" size={24} />
                   Professional Experience
                 </h4>
-                
+
                 <div className="space-y-6">
                   {experiences.map((exp, index) => (
                     <motion.div
@@ -83,14 +85,19 @@ const Resume = () => {
                         <h5 className="font-semibold text-lg text-gray-800 dark:text-gray-200">
                           {exp.position}
                         </h5>
-                        <p className="text-primary-600 font-medium">{exp.company}</p>
+                        <p className="text-primary-600 font-medium">
+                          {exp.company}
+                        </p>
                         <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1 mt-1">
                           <Calendar size={14} />
                           {exp.duration}
                         </p>
                         <ul className="mt-3 space-y-1">
                           {exp.description.map((desc, i) => (
-                            <li key={i} className="text-sm text-gray-600 dark:text-gray-400">
+                            <li
+                              key={i}
+                              className="text-sm text-gray-600 dark:text-gray-400"
+                            >
                               • {desc}
                             </li>
                           ))}
@@ -123,8 +130,16 @@ const Resume = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleDownload}
-                  className="px-8 py-4 bg-gradient-to-r from-primary-600 to-primary-500 text-white rounded-full font-medium shadow-lg hover:shadow-xl transition-all duration-200 inline-flex items-center gap-3 group"
-                >
+                  className="
+                      px-8 py-4 
+                      bg-blue-500 text-white shadow-lg 
+                      hover:bg-blue-700 
+                      dark:bg-primary-600 dark:hover:bg-primary-700 
+                      rounded-full font-medium 
+                      transition-all duration-200 
+                      inline-flex items-center gap-3 group
+                    "
+                  >
                   <Download className="group-hover:animate-bounce" size={20} />
                   Download Full Resume (PDF)
                 </motion.button>
@@ -145,8 +160,12 @@ const Resume = () => {
               <div className="w-16 h-16 bg-blue-400 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl font-bold text-blue-800">1+</span>
               </div>
-              <h4 className="font-semibold text-gray-800 dark:text-gray-200">Years Experience</h4>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">In Software Development</p>
+              <h4 className="font-semibold text-gray-800 dark:text-gray-200">
+                Years Experience
+              </h4>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                In Software Development
+              </p>
             </motion.div>
 
             {/* <motion.div
@@ -175,8 +194,12 @@ const Resume = () => {
               <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl font-bold text-green-600">15+</span>
               </div>
-              <h4 className="font-semibold text-gray-800 dark:text-gray-200">Technologies</h4>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Mastered & Applied</p>
+              <h4 className="font-semibold text-gray-800 dark:text-gray-200">
+                Technologies
+              </h4>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                Mastered & Applied
+              </p>
             </motion.div>
           </div>
         </div>

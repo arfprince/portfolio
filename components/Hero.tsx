@@ -61,7 +61,7 @@ const Hero = () => {
   ];
 
   return (
-    <section id="home" className="scroll-mt-24 min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-gray-900 via-primary-900/20 to-gray-900 pt-24 md:pt-28 pb-16">
+    <section id="home" className="scroll-mt-24 min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-white via-primary-50/50 to-gray-50 dark:from-gray-900 dark:via-primary-900/20 dark:to-gray-900 pt-24 md:pt-28 pb-16 transition-colors duration-300">
       {/* Animated Background */}
       <div className="absolute inset-0 w-full h-full md:mt-4">
         <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
@@ -93,14 +93,14 @@ const Hero = () => {
               transition={{ delay: 0.2 }}
               className="mb-4 sm:mb-6"
             >
-              <span className="text-primary-400 font-medium text-base sm:text-lg">Hello, I'm</span>
+              <span className="text-primary-600 dark:text-primary-400 font-medium text-base sm:text-lg">Hello, I'm</span>
             </motion.div>
 
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-white mb-3 sm:mb-4 break-words leading-tight"
+              className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4 break-words leading-tight"
             >
               {personalInfo.name}
             </motion.h1>
@@ -111,7 +111,7 @@ const Hero = () => {
               transition={{ delay: 0.4 }}
               className="mb-4 sm:mb-6"
             >
-              <span className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600 font-semibold break-words">
+              <span className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-primary-500 dark:from-primary-400 dark:to-primary-600 font-semibold break-words">
                 {personalInfo.title}
               </span>
             </motion.div>
@@ -120,7 +120,7 @@ const Hero = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
-              className="text-gray-300 text-sm sm:text-base md:text-lg mb-6 md:mb-8 leading-relaxed break-words"
+              className="text-gray-600 dark:text-gray-300 text-sm sm:text-base md:text-lg mb-6 md:mb-8 leading-relaxed break-words"
             >
               {personalInfo.bio}
             </motion.p>
@@ -199,26 +199,26 @@ const Hero = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 }}
-                className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-3 sm:p-4 mb-6 md:mb-8 border border-gray-700 overflow-hidden"
+                className="bg-white/80 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl p-3 sm:p-4 mb-6 md:mb-8 border border-gray-200 dark:border-gray-700 overflow-hidden shadow-lg"
               >
                 <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
                   <div className="flex items-center gap-2">
                     <FaGithub className="text-primary-400" size={16} />
-                    <span className="text-xs sm:text-sm text-gray-400">GitHub Activity</span>
+                    <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">GitHub Activity</span>
                   </div>
                   <div className="flex gap-3 sm:gap-4 text-xs sm:text-sm">
-                    <span className="text-gray-300 whitespace-nowrap">
-                      <span className="text-primary-400 font-semibold">{githubStats.publicRepos}</span> repos
+                    <span className="text-gray-700 dark:text-gray-300 whitespace-nowrap">
+                      <span className="text-primary-600 dark:text-primary-400 font-semibold">{githubStats.publicRepos}</span> repos
                     </span>
-                    <span className="text-gray-300 whitespace-nowrap">
-                      <span className="text-primary-400 font-semibold">{githubStats.followers}</span> followers
+                    <span className="text-gray-700 dark:text-gray-300 whitespace-nowrap">
+                      <span className="text-primary-600 dark:text-primary-400 font-semibold">{githubStats.followers}</span> followers
                     </span>
                   </div>
                 </div>
                 
                 {recentCommits.length > 0 && (
                   <div className="space-y-2">
-                    <p className="text-xs text-gray-500 mb-2">Recent commits:</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-500 mb-2">Recent commits:</p>
                     {recentCommits.map((commit, index) => (
                       <motion.div
                         key={index}
@@ -229,8 +229,8 @@ const Hero = () => {
                       >
                         <GitCommit size={14} className="text-green-400 mt-0.5" />
                         <div className="flex-1">
-                          <p className="text-gray-300 truncate">{commit.message}</p>
-                          <p className="text-gray-500">{commit.repo.split('/')[1]} • {commit.date}</p>
+                          <p className="text-gray-700 dark:text-gray-300 truncate">{commit.message}</p>
+                          <p className="text-gray-500 dark:text-gray-500">{commit.repo.split('/')[1]} • {commit.date}</p>
                         </div>
                       </motion.div>
                     ))}
@@ -262,7 +262,7 @@ const Hero = () => {
                 href="#contact"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-6 sm:px-8 py-2.5 sm:py-3 border-2 border-primary-500 text-primary-400 rounded-full font-medium text-sm sm:text-base hover:bg-primary-500/10 transition-colors duration-200"
+                className="px-6 sm:px-8 py-2.5 sm:py-3 border-2 border-primary-500 text-primary-600 dark:text-primary-400 rounded-full font-medium text-sm sm:text-base hover:bg-primary-500/10 transition-colors duration-200"
               >
                 Contact Me
               </motion.a>
@@ -285,7 +285,7 @@ const Hero = () => {
                     rel="noopener noreferrer"
                     whileHover={{ scale: 1.2, rotate: 5 }}
                     whileTap={{ scale: 0.9 }}
-                    className="w-11 h-11 sm:w-12 sm:h-12 bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-full flex items-center justify-center text-gray-400 hover:text-primary-400 hover:border-primary-500 transition-all duration-200"
+                    className="w-11 h-11 sm:w-12 sm:h-12 bg-white/80 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 hover:border-primary-500 transition-all duration-200 shadow-lg"
                   >
                     <Icon size={20} />
                   </motion.a>
@@ -373,12 +373,12 @@ const Hero = () => {
           <motion.div
             animate={{ y: [0, 10, 0] }}
             transition={{ duration: 1.5, repeat: Infinity }}
-            className="w-6 h-10 border-2 border-primary-400 rounded-full flex justify-center"
+            className="w-6 h-10 border-2 border-primary-600 dark:border-primary-400 rounded-full flex justify-center"
           >
             <motion.div
               animate={{ y: [0, 15, 0] }}
               transition={{ duration: 1.5, repeat: Infinity }}
-              className="w-1 h-3 bg-primary-400 rounded-full mt-2"
+              className="w-1 h-3 bg-primary-600 dark:bg-primary-400 rounded-full mt-2"
             />
           </motion.div>
         </motion.div>
