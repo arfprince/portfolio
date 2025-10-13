@@ -1,7 +1,7 @@
 [
   {
     "name": "production",
-    "ip": "16.171.28.244",
+    "ip": "51.20.31.250",
     "username": "ubuntu",
     "port": "22",
     "path": "/home/ubuntu/portfolio",
