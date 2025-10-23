@@ -15,7 +15,7 @@ export default function GithubHeatmap() {
     let cancelled = false;
     (async () => {
       try {
-        const res = await fetch('/apis/github-contrib', { cache: 'no-store' });
+        const res = await fetch('/route/github-contrib', { cache: 'no-store' });
         const json: ApiResponse = await res.json();
         if (!res.ok) throw new Error(json?.error || 'Failed to load');
         if (!cancelled) setData(json);
