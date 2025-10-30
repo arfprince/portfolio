@@ -68,10 +68,10 @@ jobs:
             --output text)
           echo "TASK_DEF_ARN=$TASK_DEF_ARN" >> $GITHUB_ENV
 
-      - name: Deploy ECS Service
-        run: |
-          aws ecs update-service \
-            --cluster ${{ secrets.ECS_CLUSTER }} \
-            --service ${{ secrets.ECS_SERVICE }} \
-            --task-definition $TASK_DEF_ARN \
-            --force-new-deployment
+      # - name: Deploy ECS Service
+      #   run: |
+      #     aws ecs update-service \
+      #       --cluster ${{ secrets.ECS_CLUSTER }} \
+      #       --service ${{ secrets.ECS_SERVICE }} \
+      #       --task-definition $TASK_DEF_ARN \
+      #       --force-new-deployment
