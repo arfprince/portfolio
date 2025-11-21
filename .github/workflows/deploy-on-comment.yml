@@ -151,7 +151,4 @@ jobs:
               repo: context.repo.repo,
               workflow_id: 'deploy.yml',
               ref: '${{ steps.pr.outputs.branch }}',
-              inputs: {
-                pr_number: String(context.issue.number)
-              }
             });
