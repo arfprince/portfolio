@@ -1,15 +1,12 @@
 name: PR Deployment Bot
 
 on:
-  # Trigger when PR is opened or synchronized (new commits pushed)
   pull_request:
     types: [opened, synchronize, reopened]
-
-  # Trigger when someone comments on a PR
+  
   issue_comment:
     types: [created]
 
-# Permissions needed for the bot to work
 permissions:
   contents: read
   pull-requests: write
@@ -17,107 +14,186 @@ permissions:
   actions: write
 
 jobs:
-  # ============================================
-  # JOB 1: Post initial deployment prompt on new PR
-  # ============================================
   post-deployment-prompt:
     name: Post Deployment Options
     runs-on: ubuntu-latest
-    # Only run on PR events (not comments)
     if: github.event_name == 'pull_request'
-
-    outputs:
-      changed_services: ${{ steps.detect.outputs.changed_services }}
-
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Full history needed for diff
+          fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
-
+      
       - name: Fetch base branch
         run: |
           git fetch origin ${{ github.event.pull_request.base.ref }}
-
+      
       - name: Detect changed services
         id: detect
         run: |
-          chmod +x .github/scripts/detect-changes.sh
-          ./.github/scripts/detect-changes.sh ${{ github.event.pull_request.base.ref }}
-
-      - name: Find existing bot comment
-        id: find-comment
-        uses: peter-evans/find-comment@v2
+          BASE_BRANCH="${{ github.event.pull_request.base.ref }}"
+          CHANGED_SERVICES=""
+          
+          CHANGED_FILES=$(git diff --name-only origin/$BASE_BRANCH...HEAD)
+          
+          echo "Changed files:"
+          echo "$CHANGED_FILES"
+          echo "---"
+          
+          if echo "$CHANGED_FILES" | grep -q "^apps/ezystudio-api/"; then
+              CHANGED_SERVICES="$CHANGED_SERVICES api"
+              echo "✓ API service has changes"
+          fi
+          
+          if echo "$CHANGED_FILES" | grep -q "^apps/ezystudio-web/"; then
+              CHANGED_SERVICES="$CHANGED_SERVICES web"
+              echo "✓ Web service has changes"
+          fi
+          
+          if echo "$CHANGED_FILES" | grep -q "^apps/ezystudio-admin/"; then
+              CHANGED_SERVICES="$CHANGED_SERVICES admin"
+              echo "✓ Admin service has changes"
+          fi
+          
+          if echo "$CHANGED_FILES" | grep -q "^apps/ezystudio-worker/"; then
+              CHANGED_SERVICES="$CHANGED_SERVICES worker"
+              echo "✓ Worker service has changes"
+          fi
+          
+          CHANGED_SERVICES=$(echo "$CHANGED_SERVICES" | xargs)
+          
+          if [ -z "$CHANGED_SERVICES" ]; then
+              echo "No service changes detected"
+              echo "changed_services=none" >> $GITHUB_OUTPUT
+          else
+              echo "Services with changes: $CHANGED_SERVICES"
+              echo "changed_services=$CHANGED_SERVICES" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Post deployment comment
+        uses: actions/github-script@v7
         with:
-          issue-number: ${{ github.event.pull_request.number }}
-          comment-author: "github-actions[bot]"
-          body-includes: "## 🚀 Preview Deployment"
-
-      - name: Create or update deployment comment
-        uses: peter-evans/create-or-update-comment@v3
-        with:
-          comment-id: ${{ steps.find-comment.outputs.comment-id }}
-          issue-number: ${{ github.event.pull_request.number }}
-          edit-mode: replace
-          body: |
-            ## 🚀 Preview Deployment
-
+          script: |
+            const changedServices = '${{ steps.detect.outputs.changed_services }}';
+            
+            const body = `## 🚀 Preview Deployment
+            
             Hello @${{ github.event.pull_request.user.login }}! 👋
-
+            
             I detected changes in your PR. Would you like to deploy a preview environment?
-
+            
             ---
-
+            
             ### 📦 Services with Changes
-
-            ${{ steps.detect.outputs.changed_services != '' && format('The following services have been modified: **{0}**', steps.detect.outputs.changed_services) || '⚠️ No service changes detected in this PR.' }}
-
+            
+            ${changedServices !== 'none' ? `**Changed services:** \`${changedServices}\`` : '⚠️ No service changes detected in standard paths.'}
+            
             ---
-
-            ### 🎯 Deployment Options
-
-            **To deploy, reply to this PR with one of these commands:**
-
+            
+            ### 🎯 Deployment Commands
+            
+            Reply with one of these commands:
+            
             | Command | Description |
             |---------|-------------|
-            | `/deploy all` | Deploy all changed services |
-            | `/deploy api` | Deploy only API service |
-            | `/deploy web` | Deploy only Web service |
-            | `/deploy admin` | Deploy only Admin service |
-            | `/deploy worker` | Deploy only Worker service |
-            | `/deploy api web` | Deploy multiple services (space-separated) |
-            | `/deploy-interactive` | Show interactive selection |
-
+            | \`/deploy all\` | Deploy all services |
+            | \`/deploy api\` | Deploy only API service |
+            | \`/deploy web\` | Deploy only Web service |
+            | \`/deploy admin\` | Deploy only Admin service |
+            | \`/deploy worker\` | Deploy only Worker service |
+            | \`/deploy api web\` | Deploy multiple services |
+            
             ---
+            
+            *🤖 I'm a bot! Reply with a command to start deployment.*`;
+            
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });
 
-            ### ℹ️ Quick Actions
+  process-deployment-command:
+    name: Process Deployment Command
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'issue_comment' &&
+      github.event.issue.pull_request &&
+      startsWith(github.event.comment.body, '/deploy')
+    
+    steps:
+      - name: Parse command and respond
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const comment = context.payload.comment.body;
+            let servicesToDeploy = [];
+            let responseMessage = '';
+            
+            // Add eyes reaction to show we're processing
+            await github.rest.reactions.createForIssueComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: context.payload.comment.id,
+              content: 'eyes'
+            });
+            
+            // Parse the command
+            if (comment.includes('/deploy all')) {
+              servicesToDeploy = ['api', 'web', 'admin', 'worker'];
+            } else if (comment.match(/\/deploy\s+[\w\s]+/)) {
+              const match = comment.match(/\/deploy\s+([\w\s]+)/);
+              if (match) {
+                const requested = match[1].trim().split(/\s+/);
+                const valid = ['api', 'web', 'admin', 'worker'];
+                servicesToDeploy = requested.filter(s => valid.includes(s.toLowerCase()));
+              }
+            }
+            
+            if (servicesToDeploy.length === 0) {
+              responseMessage = `## ⚠️ Invalid Command
+              
+              @${context.payload.comment.user.login}, I couldn't understand your command.
+              
+              **Valid commands:**
+              - \`/deploy all\` - Deploy all services
+              - \`/deploy api web\` - Deploy specific services
+              
+              Please try again.`;
+            } else {
+              responseMessage = `## 🚀 Deployment Starting!
+              
+              @${context.payload.comment.user.login}, I'm deploying the following services:
+              
+              **Services:** \`${servicesToDeploy.join(', ')}\`
+              
+              | Service | Status |
+              |---------|--------|
+              ${servicesToDeploy.map(s => `| ${s.toUpperCase()} | 🔄 Triggered |`).join('\n')}
+              
+              ---
+              
+              *Check the Actions tab for deployment progress.*`;
+              
+              // Add rocket reaction for success
+              await github.rest.reactions.createForIssueComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: context.payload.comment.id,
+                content: 'rocket'
+              });
+            }
+            
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: responseMessage
+            });
 
-            - ✅ **Deploy changed services only:** `/deploy changed`
-            - 🔄 **Redeploy after new commits:** Just comment the deploy command again
-            - ❌ **Cancel deployment:** `/deploy cancel`
-
-            ---
-
-            <details>
-            <summary>📋 Deployment Status</summary>
-
-            | Service | Status | Last Deployed |
-            |---------|--------|---------------|
-            | API | ⏳ Not deployed | - |
-            | Web | ⏳ Not deployed | - |
-            | Admin | ⏳ Not deployed | - |
-            | Worker | ⏳ Not deployed | - |
-
-            </details>
-
-            ---
-
-            *🤖 I'm a bot! Reply with a command above to get started.*
-
-  # ============================================
-  # JOB 2: Handle interactive selection request
-  # ============================================
   show-interactive-selection:
     name: Show Interactive Selection
     runs-on: ubuntu-latest
@@ -125,318 +201,30 @@ jobs:
       github.event_name == 'issue_comment' &&
       github.event.issue.pull_request &&
       contains(github.event.comment.body, '/deploy-interactive')
-
+    
     steps:
-      - name: Post interactive selection form
-        uses: peter-evans/create-or-update-comment@v3
-        with:
-          issue-number: ${{ github.event.issue.number }}
-          body: |
-            ## 🎛️ Interactive Deployment Selection
-
-            @${{ github.event.comment.user.login }}, please select the services you want to deploy:
-
-            ---
-
-            ### Select Services:
-
-            Copy the command below and modify it with your selections:
-            ```
-                        /deploy-selected
-                        - [x] api
-                        - [x] web
-                        - [ ] admin
-                        - [ ] worker
-            ```
-
-            **Instructions:**
-            1. Copy the above code block
-            2. Change `[ ]` to `[x]` for services you want to deploy
-            3. Change `[x]` to `[ ]` for services you DON'T want to deploy
-            4. Paste as a new comment
-
-            ---
-
-            **Or use quick commands:**
-            - `/deploy api web` - Deploy specific services
-            - `/deploy all` - Deploy all services
-            - `/deploy changed` - Deploy only changed services
-
-            ---
-
-            *🤖 Waiting for your selection...*
-
-  # ============================================
-  # JOB 3: Parse deployment command and trigger workflows
-  # ============================================
-  process-deployment-command:
-    name: Process Deployment Command
-    runs-on: ubuntu-latest
-    if: |
-      github.event_name == 'issue_comment' &&
-      github.event.issue.pull_request &&
-      (startsWith(github.event.comment.body, '/deploy') || 
-       contains(github.event.comment.body, '/deploy-selected'))
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Get PR details
-        id: pr-details
+      - name: Post selection form
         uses: actions/github-script@v7
         with:
           script: |
-            const pr = await github.rest.pulls.get({
+            const body = `## 🎛️ Select Services to Deploy
+            
+            @${context.payload.comment.user.login}, copy and modify this command:
+            
+            \`\`\`
+            /deploy api web admin worker
+            \`\`\`
+            
+            Remove the services you DON'T want to deploy, then post the command.
+            
+            **Examples:**
+            - \`/deploy api\` - Deploy only API
+            - \`/deploy api web\` - Deploy API and Web
+            - \`/deploy all\` - Deploy everything`;
+            
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              pull_number: context.issue.number
-            });
-
-            core.setOutput('head_sha', pr.data.head.sha);
-            core.setOutput('head_ref', pr.data.head.ref);
-            core.setOutput('base_ref', pr.data.base.ref);
-
-            return pr.data;
-
-      - name: Parse deployment command
-        id: parse-command
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const comment = context.payload.comment.body;
-            let servicesToDeploy = [];
-
-            console.log('Processing comment:', comment);
-
-            // Handle /deploy-selected with checkboxes
-            if (comment.includes('/deploy-selected')) {
-              const lines = comment.split('\n');
-              for (const line of lines) {
-                // Match checked boxes: - [x] servicename or - [X] servicename
-                const match = line.match(/- \[[xX]\]\s*(\w+)/);
-                if (match) {
-                  servicesToDeploy.push(match[1].toLowerCase());
-                }
-              }
-            }
-            // Handle /deploy cancel
-            else if (comment.includes('/deploy cancel')) {
-              core.setOutput('action', 'cancel');
-              core.setOutput('services', '');
-              return;
-            }
-            // Handle /deploy all
-            else if (comment.includes('/deploy all')) {
-              servicesToDeploy = ['api', 'web', 'admin', 'worker'];
-            }
-            // Handle /deploy changed
-            else if (comment.includes('/deploy changed')) {
-              core.setOutput('action', 'deploy-changed');
-              core.setOutput('services', 'changed');
-              return;
-            }
-            // Handle /deploy service1 service2 ...
-            else if (comment.match(/\/deploy\s+[\w\s]+/)) {
-              const match = comment.match(/\/deploy\s+([\w\s]+)/);
-              if (match) {
-                const services = match[1].trim().split(/\s+/);
-                const validServices = ['api', 'web', 'admin', 'worker'];
-                servicesToDeploy = services.filter(s => validServices.includes(s.toLowerCase()));
-              }
-            }
-
-            // Validate and set outputs
-            const validServices = ['api', 'web', 'admin', 'worker'];
-            servicesToDeploy = servicesToDeploy.filter(s => validServices.includes(s));
-
-            if (servicesToDeploy.length === 0) {
-              core.setOutput('action', 'invalid');
-              core.setOutput('services', '');
-            } else {
-              core.setOutput('action', 'deploy');
-              core.setOutput('services', servicesToDeploy.join(' '));
-            }
-
-            console.log('Services to deploy:', servicesToDeploy);
-
-      - name: Detect changed services (for /deploy changed)
-        id: detect-changes
-        if: steps.parse-command.outputs.action == 'deploy-changed'
-        run: |
-          git fetch origin ${{ steps.pr-details.outputs.base_ref }}
-          bash .github/scripts/detect-changes.sh ${{ github.event.pull_request.base.ref }}
-
-      - name: React to comment (acknowledge)
-        uses: actions/github-script@v7
-        with:
-          script: |
-            await github.rest.reactions.createForIssueComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              comment_id: context.payload.comment.id,
-              content: 'eyes'
-            });
-
-      - name: Post invalid command response
-        if: steps.parse-command.outputs.action == 'invalid'
-        uses: peter-evans/create-or-update-comment@v3
-        with:
-          issue-number: ${{ github.event.issue.number }}
-          body: |
-            ## ⚠️ Invalid Command
-
-            @${{ github.event.comment.user.login }}, I couldn't understand your deployment command.
-
-            **Valid commands:**
-            - `/deploy all` - Deploy all services
-            - `/deploy api web admin worker` - Deploy specific services (space-separated)
-            - `/deploy changed` - Deploy only changed services
-            - `/deploy-interactive` - Show interactive selection
-
-            Please try again with a valid command.
-
-      - name: Post cancel confirmation
-        if: steps.parse-command.outputs.action == 'cancel'
-        uses: peter-evans/create-or-update-comment@v3
-        with:
-          issue-number: ${{ github.event.issue.number }}
-          body: |
-            ## ❌ Deployment Cancelled
-
-            @${{ github.event.comment.user.login }}, the deployment has been cancelled.
-
-            You can start a new deployment anytime by commenting with `/deploy` commands.
-
-      - name: Determine final services to deploy
-        id: final-services
-        run: |
-          if [ "${{ steps.parse-command.outputs.action }}" == "deploy-changed" ]; then
-            echo "services=${{ steps.detect-changes.outputs.changed_services }}" >> $GITHUB_OUTPUT
-          else
-            echo "services=${{ steps.parse-command.outputs.services }}" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Post deployment starting message
-        if: steps.parse-command.outputs.action == 'deploy' || steps.parse-command.outputs.action == 'deploy-changed'
-        uses: peter-evans/create-or-update-comment@v3
-        with:
-          issue-number: ${{ github.event.issue.number }}
-          body: |
-            ## 🚀 Deployment Starting!
-
-            @${{ github.event.comment.user.login }}, I'm now deploying the following services:
-
-            **Services:** `${{ steps.final-services.outputs.services }}`
-            **Branch:** `${{ steps.pr-details.outputs.head_ref }}`
-            **Commit:** `${{ steps.pr-details.outputs.head_sha }}`
-
-            ---
-
-            ### 📊 Deployment Progress
-
-            | Service | Status | Workflow |
-            |---------|--------|----------|
-            ${{ contains(steps.final-services.outputs.services, 'api') && '| API | 🔄 Starting... | [View Workflow](#) |' || '' }}
-            ${{ contains(steps.final-services.outputs.services, 'web') && '| Web | 🔄 Starting... | [View Workflow](#) |' || '' }}
-            ${{ contains(steps.final-services.outputs.services, 'admin') && '| Admin | 🔄 Starting... | [View Workflow](#) |' || '' }}
-            ${{ contains(steps.final-services.outputs.services, 'worker') && '| Worker | 🔄 Starting... | [View Workflow](#) |' || '' }}
-
-            ---
-
-            *⏳ Please wait while the deployments are being triggered...*
-
-      # Trigger individual service workflows
-      - name: Trigger API deployment
-        if: |
-          (steps.parse-command.outputs.action == 'deploy' || steps.parse-command.outputs.action == 'deploy-changed') &&
-          contains(steps.final-services.outputs.services, 'api')
-        uses: actions/github-script@v7
-        with:
-          script: |
-            await github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'deploy-api.yml',
-              ref: '${{ steps.pr-details.outputs.head_ref }}',
-              inputs: {
-                pr_number: '${{ github.event.issue.number }}',
-                environment: 'preview',
-                triggered_by: '${{ github.event.comment.user.login }}'
-              }
-            });
-            console.log('API deployment triggered');
-
-      - name: Trigger Web deployment
-        if: |
-          (steps.parse-command.outputs.action == 'deploy' || steps.parse-command.outputs.action == 'deploy-changed') &&
-          contains(steps.final-services.outputs.services, 'web')
-        uses: actions/github-script@v7
-        with:
-          script: |
-            await github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'deploy-web.yml',
-              ref: '${{ steps.pr-details.outputs.head_ref }}',
-              inputs: {
-                pr_number: '${{ github.event.issue.number }}',
-                environment: 'preview',
-                triggered_by: '${{ github.event.comment.user.login }}'
-              }
-            });
-            console.log('Web deployment triggered');
-
-      - name: Trigger Admin deployment
-        if: |
-          (steps.parse-command.outputs.action == 'deploy' || steps.parse-command.outputs.action == 'deploy-changed') &&
-          contains(steps.final-services.outputs.services, 'admin')
-        uses: actions/github-script@v7
-        with:
-          script: |
-            await github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'deploy-admin.yml',
-              ref: '${{ steps.pr-details.outputs.head_ref }}',
-              inputs: {
-                pr_number: '${{ github.event.issue.number }}',
-                environment: 'preview',
-                triggered_by: '${{ github.event.comment.user.login }}'
-              }
-            });
-            console.log('Admin deployment triggered');
-
-      - name: Trigger Worker deployment
-        if: |
-          (steps.parse-command.outputs.action == 'deploy' || steps.parse-command.outputs.action == 'deploy-changed') &&
-          contains(steps.final-services.outputs.services, 'worker')
-        uses: actions/github-script@v7
-        with:
-          script: |
-            await github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'deploy-worker.yml',
-              ref: '${{ steps.pr-details.outputs.head_ref }}',
-              inputs: {
-                pr_number: '${{ github.event.issue.number }}',
-                environment: 'preview',
-                triggered_by: '${{ github.event.comment.user.login }}'
-              }
-            });
-            console.log('Worker deployment triggered');
-
-      - name: React to comment (success)
-        if: steps.parse-command.outputs.action == 'deploy' || steps.parse-command.outputs.action == 'deploy-changed'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            await github.rest.reactions.createForIssueComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              comment_id: context.payload.comment.id,
-              content: 'rocket'
+              body: body
             });
