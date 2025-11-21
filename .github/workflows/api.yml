@@ -10,7 +10,7 @@ on:
       deploy_to_ecs:
         description: 'Deploy to ECS after build?'
         required: false
-        default: 'true'
+        default: true
         type: boolean
 
 permissions:
