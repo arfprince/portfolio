@@ -53,7 +53,7 @@ jobs:
             const parts = comment.trim().split(/\s+/).slice(1);
             const requested = parts.map(s => s.toLowerCase());
 
-            const allowedServices = ['api', 'auth', 'dashboard', 'payment'];
+            const allowedServices = ['api', 'auth', 'dashboard', 'payment', 'ci'];
             const selected = requested.filter(s => allowedServices.includes(s));
 
             if (selected.length === 0) {
@@ -85,7 +85,7 @@ jobs:
             await github.rest.actions.createWorkflowDispatch({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              workflow_id: 'api.yml',
+              workflow_id: 'ci.yml',
               ref: '${{ steps.pr.outputs.branch }}',
               inputs: {
                 pr_number: String(context.issue.number)
