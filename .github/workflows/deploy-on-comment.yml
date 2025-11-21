@@ -5,98 +5,137 @@ on:
     types: [created]
 
 permissions:
-  pull-requests: read
+  pull-requests: write
   actions: write
   issues: write
   contents: read
 
 jobs:
   handle-command:
-    if: startsWith(github.event.comment.body, '/deploy')
+    # Only run on PR comments that start with /deploy
+    if: |
+      github.event.issue.pull_request && 
+      startsWith(github.event.comment.body, '/deploy')
     runs-on: ubuntu-latest
 
     steps:
+      - name: React to comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.reactions.createForIssueComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: context.payload.comment.id,
+              content: 'rocket'
+            });
+
+      - name: Get PR details
+        id: pr
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
+            core.setOutput('branch', pr.data.head.ref);
+            core.setOutput('sha', pr.data.head.sha);
+            return pr.data;
+
       - name: Parse deploy command
         id: parse
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const comment = context.payload.comment.body;
-            const prNumber = context.payload.issue.number;
-            const repo = context.repo;
-
-            const parts = comment.split(/\s+/).slice(1); 
+            const parts = comment.trim().split(/\s+/).slice(1);
             const requested = parts.map(s => s.toLowerCase());
 
-            const allowed = {
-              api: "api.yml",
-              auth: "auth.yml",
-              dashboard: "dashboard.yml",
-              payment: "payment.yml"
-            };
-
-            const selected = requested.filter(s => allowed[s]);
+            const allowedServices = ['api', 'auth', 'dashboard', 'payment'];
+            const selected = requested.filter(s => allowedServices.includes(s));
 
             if (selected.length === 0) {
               await github.rest.issues.createComment({
-                owner: repo.owner,
-                repo: repo.repo,
-                issue_number: prNumber,
-                body: `⚠️ No valid services found. Valid options: api, auth, dashboard, payment`
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: `⚠️ No valid services found. Valid options: ${allowedServices.join(', ')}`
               });
+              core.setFailed('No valid services specified');
               return;
             }
 
-            core.setOutput("selected", JSON.stringify(selected));
-            core.setOutput("pr", prNumber);
-
+            core.setOutput('services', selected.join(','));
+            
             await github.rest.issues.createComment({
-              owner: repo.owner,
-              repo: repo.repo,
-              issue_number: prNumber,
-              body: `▶️ Deploy command received: **${selected.join(', ')}**`
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `🚀 Deploying: **${selected.join(', ')}** from branch \`${{ steps.pr.outputs.branch }}\``
             });
 
-      - name: Trigger workflows
-        if: steps.parse.outputs.selected != ''
+      - name: Trigger API deployment
+        if: contains(steps.parse.outputs.services, 'api')
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.PAT_TOKEN }}
           script: |
-            const selected = JSON.parse(core.getInput('selected') || '${{ steps.parse.outputs.selected }}');
-            const prNumber = ${{ steps.parse.outputs.pr }};
-            const repo = context.repo;
-
-            // Get branch name of PR
-            const pr = await github.rest.pulls.get({
-              owner: repo.owner,
-              repo: repo.repo,
-              pull_number: prNumber
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'api.yml',
+              ref: '${{ steps.pr.outputs.branch }}',
+              inputs: {
+                pr_number: String(context.issue.number)
+              }
             });
-            const branch = pr.data.head.ref;
 
-            const workflowFiles = {
-              api: "api.yml",
-              auth: "auth.yml",
-              dashboard: "dashboard.yml",
-              payment: "payment.yml"
-            };
+      - name: Trigger Auth deployment
+        if: contains(steps.parse.outputs.services, 'auth')
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.PAT_TOKEN }}
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'auth.yml',
+              ref: '${{ steps.pr.outputs.branch }}',
+              inputs: {
+                pr_number: String(context.issue.number)
+              }
+            });
 
-            for (const s of selected) {
-              const workflow = workflowFiles[s];
+      - name: Trigger Dashboard deployment
+        if: contains(steps.parse.outputs.services, 'dashboard')
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.PAT_TOKEN }}
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'dashboard.yml',
+              ref: '${{ steps.pr.outputs.branch }}',
+              inputs: {
+                pr_number: String(context.issue.number)
+              }
+            });
 
-              await github.rest.actions.createWorkflowDispatch({
-                owner: repo.owner,
-                repo: repo.repo,
-                workflow_id: workflow,
-                ref: branch
-              });
-
-              await github.rest.issues.createComment({
-                owner: repo.owner,
-                repo: repo.repo,
-                issue_number: prNumber,
-                body: `🚀 Triggered **${s}** deployment workflow (branch: \`${branch}\`).`
-              });
-            }
+      - name: Trigger Payment deployment
+        if: contains(steps.parse.outputs.services, 'payment')
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.PAT_TOKEN }}
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'payment.yml',
+              ref: '${{ steps.pr.outputs.branch }}',
+              inputs: {
+                pr_number: String(context.issue.number)
+              }
+            });
