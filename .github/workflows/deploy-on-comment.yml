@@ -1,0 +1,150 @@
+name: Deploy on PR Comment
+
+on:
+  issue_comment:
+    types:
+      - created
+      - edited
+
+permissions:
+  # Need to read PR details and dispatch workflows, and create comments
+  pull-requests: read
+  contents: read
+  actions: write
+  issues: write
+
+jobs:
+  parse-and-trigger:
+    runs-on: ubuntu-latest
+    if: github.event.issue.pull_request != null  # ensure comment is on a PR
+    steps:
+      - name: Determine selected services from comment
+        id: parse
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const body = context.payload.comment.body || "";
+            const commentAuthor = context.payload.comment.user.login;
+            const issueNumber = context.payload.issue.number;
+            const repo = context.repo;
+
+            // Helper: parse slash command like "/deploy api payment"
+            function parseSlash(bodyText) {
+              const m = bodyText.match(/\/deploy\s+([a-zA-Z0-9_\- \t]+)/i);
+              if (!m) return [];
+              return m[1].split(/\s+/).map(s => s.trim().toLowerCase()).filter(Boolean);
+            }
+
+            // Helper: parse checked items in a checklist:
+            // matches lines like "- [x] api" or "- [X] api" (case-insensitive)
+            function parseCheckedBoxes(bodyText) {
+              const lines = bodyText.split(/\r?\n/);
+              const found = [];
+              for (const line of lines) {
+                const m = line.match(/^\s*-\s*\[\s*[xX]\s*\]\s*([a-zA-Z0-9_\-]+)/);
+                if (m) found.push(m[1].toLowerCase());
+              }
+              return found;
+            }
+
+            // Prefer slash command if present; else use checked boxes
+            let services = parseSlash(body);
+            if (services.length === 0) {
+              services = parseCheckedBoxes(body);
+            }
+
+            // Allowed services map — map user words to exact workflow filenames
+            const allowed = {
+              api: "api.yml",
+              payment: "payment.yml",
+              dashboard: "dashboard.yml",
+              auth: "auth.yml",
+              authentication: "auth.yml"
+            };
+
+            // Filter to only allowed services and unique
+            const unique = [...new Set(services.map(s => s.toLowerCase()).filter(s => !!s))];
+            const selected = unique.filter(s => Object.keys(allowed).includes(s)).map(s => ({ name: s, workflow: allowed[s] }));
+
+            // Save to outputs
+            core.setOutput("selected_count", selected.length);
+            core.setOutput("raw_selected", JSON.stringify(selected));
+
+            // Post a status comment if nothing selected
+            if (selected.length === 0) {
+              await github.rest.issues.createComment({
+                owner: repo.owner,
+                repo: repo.repo,
+                issue_number: issueNumber,
+                body: `⚠️ I couldn't find any selected services in your comment.  
+                Please use \`/deploy api payment\` or check boxes in the bot checklist (edit & check).`
+                            });
+                            } else {
+                            await github.rest.issues.createComment({
+                                owner: repo.owner,
+                                repo: repo.repo,
+                                issue_number: issueNumber,
+                                body: `🔔 Detected request to deploy: **${selected.map(s=>s.name).join(', ')}**. Starting deployments...`
+                            });
+                            }
+
+            return { selected };
+      - name: Trigger workflows for selected services
+        if: steps.parse.outputs.selected_count != '0'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const repo = context.repo;
+            const issueNumber = context.payload.issue.number;
+            // parse the selected list that we returned earlier
+            const selected = JSON.parse(core.getInput('selected-json') || '${{ steps.parse.outputs.raw_selected }}');
+            // helper: get PR details to determine branch ref
+            const prResponse = await github.rest.pulls.get({
+              owner: repo.owner,
+              repo: repo.repo,
+              pull_number: issueNumber
+            });
+
+            const prHeadRef = prResponse.data.head.ref;
+            console.log('PR head ref:', prHeadRef);
+
+            for (const s of selected) {
+              const workflowFile = s.workflow;
+              const serviceName = s.name;
+              console.log(`Dispatching ${workflowFile} for service ${serviceName} on ref ${prHeadRef}`);
+
+              try {
+                await github.rest.actions.createWorkflowDispatch({
+                  owner: repo.owner,
+                  repo: repo.repo,
+                  workflow_id: workflowFile,   // file name of workflow in .github/workflows/
+                  ref: prHeadRef,
+                  inputs: {
+                    pr_number: String(issueNumber),
+                    triggered_by: context.actor || 'github-bot'
+                  }
+                });
+
+                // Post comment about dispatch per service
+                await github.rest.issues.createComment({
+                  owner: repo.owner,
+                  repo: repo.repo,
+                  issue_number: issueNumber,
+                  body: `▶️ Workflow \`${workflowFile}\` triggered for **${serviceName}** (branch: \`${prHeadRef}\`).`
+                });
+
+              } catch (err) {
+                console.error('Dispatch failed for', workflowFile, err);
+                await github.rest.issues.createComment({
+                  owner: repo.owner,
+                  repo: repo.repo,
+                  issue_number: issueNumber,
+                  body: `❌ Failed to trigger workflow \`${workflowFile}\` for **${serviceName}** — ${err.message}`
+                });
+              }
+            }
+        env:
+          # pass the parsed JSON from previous step as input in case github-script doesn't forward outputs reliably
+          selected-json: ${{ steps.parse.outputs.raw_selected }}

@@ -1,0 +1,68 @@
+name: Ezystudio API Build & Push to ECR
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR number that triggered this workflow (optional)'
+        required: false
+        type: string
+      deploy_to_ecs:
+        description: 'Deploy to ECS after build?'
+        required: false
+        default: 'true'
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build and Push Docker Image to ECR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build Docker image
+        run: |
+          REPOSITORY_URI=${{ vars.ECR_REGISTRY_EZYSTUDIO_API }}
+          CURRENT_TAG=$REPOSITORY_URI:${{ github.sha }}
+          LATEST_TAG=$REPOSITORY_URI:latest
+
+          echo "Building image: $CURRENT_TAG"
+          docker build -t $CURRENT_TAG -f ./apps/ezystudio-api/Dockerfile.prod .
+          docker tag $CURRENT_TAG $LATEST_TAG
+
+      - name: Push to ECR
+        run: |
+          REPOSITORY_URI=${{ vars.ECR_REGISTRY_EZYSTUDIO_API }}
+          CURRENT_TAG=$REPOSITORY_URI:${{ github.sha }}
+          LATEST_TAG=$REPOSITORY_URI:latest
+
+          echo "Pushing images to ECR..."
+          docker push $CURRENT_TAG
+          docker push $LATEST_TAG
+
+      - name: Optional Deploy to ECS
+        if: ${{ inputs.deploy_to_ecs == 'true' }}
+        run: |
+          echo "Deploy to ECS placeholder (implement your ECS update here)"
+          # e.g. aws ecs update-service --cluster ... --service ... --force-new-deployment
+
+      - name: Build Summary
+        run: |
+          echo "## ✅ Build Complete!" >> $GITHUB_STEP_SUMMARY
+          echo "**Image Tag:** \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Registry:** \`${{ vars.ECR_REGISTRY_EZYSTUDIO_API }}\`" >> $GITHUB_STEP_SUMMARY
