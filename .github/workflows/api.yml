@@ -1,5 +1,4 @@
 name: Ezystudio API Build & Push to ECR
-
 on:  
   workflow_dispatch:
     inputs:
