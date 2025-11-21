@@ -8,7 +8,7 @@ on:
       - synchronize
 
 permissions:
-  # Allow creating comments and reading pull request data
+  # Allow creating comments and reading pull request data jm
   pull-requests: write
   contents: read
 
