@@ -12,7 +12,6 @@ permissions:
 
 jobs:
   handle-command:
-    # Only run on PR comments that start with /deploy
     if: |
       github.event.issue.pull_request && 
       startsWith(github.event.comment.body, '/deploy')
@@ -42,7 +41,8 @@ jobs:
             });
             core.setOutput('branch', pr.data.head.ref);
             core.setOutput('sha', pr.data.head.sha);
-            return pr.data;
+            console.log(`Branch: ${pr.data.head.ref}`);
+            console.log(`SHA: ${pr.data.head.sha}`);
 
       - name: Parse deploy command
         id: parse
@@ -50,30 +50,35 @@ jobs:
         with:
           script: |
             const comment = context.payload.comment.body;
+            console.log(`Comment: ${comment}`);
+            
             const parts = comment.trim().split(/\s+/).slice(1);
+            console.log(`Parts: ${JSON.stringify(parts)}`);
+            
             const requested = parts.map(s => s.toLowerCase());
-
-            const allowedServices = ['api', 'auth', 'dashboard', 'payment', 'deploy'];
+            const allowedServices = ['api', 'auth', 'dashboard', 'payment'];
             const selected = requested.filter(s => allowedServices.includes(s));
+            
+            console.log(`Selected services: ${JSON.stringify(selected)}`);
 
             if (selected.length === 0) {
               await github.rest.issues.createComment({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: context.issue.number,
-                body: `⚠️ No valid services found. Valid options: ${allowedServices.join(', ')}`
+                body: `⚠️ No valid services found. Valid options: ${allowedServices.join(', ')}\n\nYour comment: \`${comment}\``
               });
-              core.setFailed('No valid services specified');
-              return;
+              throw new Error('No valid services specified');
             }
 
             core.setOutput('services', selected.join(','));
+            core.setOutput('services_json', JSON.stringify(selected));
             
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              body: `🚀 Deploying: **${selected.join(', ')}** from branch \`${{ steps.pr.outputs.branch }}\``
+              body: `🚀 Deploying: **${selected.join(', ')}**\nBranch: \`${{ steps.pr.outputs.branch }}\``
             });
 
       - name: Trigger API deployment
@@ -82,15 +87,35 @@ jobs:
         with:
           github-token: ${{ secrets.PAT_TOKEN }}
           script: |
-            await github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'api.yml',
-              ref: '${{ steps.pr.outputs.branch }}',
-              inputs: {
-                pr_number: String(context.issue.number)
-              }
-            });
+            try {
+              const response = await github.rest.actions.createWorkflowDispatch({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id: 'api.yml',
+                ref: '${{ steps.pr.outputs.branch }}',
+                inputs: {
+                  pr_number: String(context.issue.number),
+                  deploy_to_ecs: 'true'
+                }
+              });
+              console.log('API workflow triggered successfully');
+              
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: `✅ Triggered **api** deployment`
+              });
+            } catch (error) {
+              console.error('Error triggering API workflow:', error);
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: `❌ Failed to trigger **api** deployment: ${error.message}`
+              });
+              throw error;
+            }
 
       - name: Trigger Auth deployment
         if: contains(steps.parse.outputs.services, 'auth')
@@ -98,15 +123,33 @@ jobs:
         with:
           github-token: ${{ secrets.PAT_TOKEN }}
           script: |
-            await github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'auth.yml',
-              ref: '${{ steps.pr.outputs.branch }}',
-              inputs: {
-                pr_number: String(context.issue.number)
-              }
-            });
+            try {
+              await github.rest.actions.createWorkflowDispatch({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id: 'auth.yml',
+                ref: '${{ steps.pr.outputs.branch }}',
+                inputs: {
+                  pr_number: String(context.issue.number)
+                }
+              });
+              console.log('Auth workflow triggered successfully');
+              
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: `✅ Triggered **auth** deployment`
+              });
+            } catch (error) {
+              console.error('Error triggering Auth workflow:', error);
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: `❌ Failed to trigger **auth** deployment: ${error.message}`
+              });
+            }
 
       - name: Trigger Dashboard deployment
         if: contains(steps.parse.outputs.services, 'dashboard')
@@ -114,15 +157,33 @@ jobs:
         with:
           github-token: ${{ secrets.PAT_TOKEN }}
           script: |
-            await github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'dashboard.yml',
-              ref: '${{ steps.pr.outputs.branch }}',
-              inputs: {
-                pr_number: String(context.issue.number)
-              }
-            });
+            try {
+              await github.rest.actions.createWorkflowDispatch({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id: 'dashboard.yml',
+                ref: '${{ steps.pr.outputs.branch }}',
+                inputs: {
+                  pr_number: String(context.issue.number)
+                }
+              });
+              console.log('Dashboard workflow triggered successfully');
+              
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: `✅ Triggered **dashboard** deployment`
+              });
+            } catch (error) {
+              console.error('Error triggering Dashboard workflow:', error);
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: `❌ Failed to trigger **dashboard** deployment: ${error.message}`
+              });
+            }
 
       - name: Trigger Payment deployment
         if: contains(steps.parse.outputs.services, 'payment')
@@ -130,28 +191,30 @@ jobs:
         with:
           github-token: ${{ secrets.PAT_TOKEN }}
           script: |
-            await github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'payment.yml',
-              ref: '${{ steps.pr.outputs.branch }}',
-              inputs: {
-                pr_number: String(context.issue.number)
-              }
-            });
-
-      - name: Trigger Deploy deployment
-        if: contains(steps.parse.outputs.services, 'deploy')
-        uses: actions/github-script@v7
-        with:
-          github-token: ${{ secrets.PAT_TOKEN }}
-          script: |
-            await github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'deploy.yml',
-              ref: '${{ steps.pr.outputs.branch }}',
-              inputs: {
-                pr_number: String(context.issue.number)
-              }
-            });
+            try {
+              await github.rest.actions.createWorkflowDispatch({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id: 'payment.yml',
+                ref: '${{ steps.pr.outputs.branch }}',
+                inputs: {
+                  pr_number: String(context.issue.number)
+                }
+              });
+              console.log('Payment workflow triggered successfully');
+              
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: `✅ Triggered **payment** deployment`
+              });
+            } catch (error) {
+              console.error('Error triggering Payment workflow:', error);
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: `❌ Failed to trigger **payment** deployment: ${error.message}`
+              });
+            }
