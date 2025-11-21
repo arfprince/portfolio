@@ -1,4 +1,4 @@
-name: Deploy Portfolio to AWS ECS (Manual Run)
+name: Deploy Portfolio to AWS ECR
 
 on:
   workflow_dispatch:
