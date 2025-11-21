@@ -31,11 +31,7 @@ jobs:
 
             **Two ways to request deployment (either one works):**
 
-            1. **Slash command** — comment on this PR:
-            \`/deploy api payment\`  
-            (Examples: \`/deploy api\`, \`/deploy api payment\`)
-
-            2. **Use the checklist below** — edit the checklist and **check** items you want:
+            **Use the checklist below** — edit the checklist and **check** items you want:
             - [ ] api
             - [ ] payment
             - [ ] dashboard
