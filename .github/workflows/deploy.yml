@@ -91,3 +91,35 @@ jobs:
           echo "**PR Number:** #${{ inputs.pr_number }}" >> $GITHUB_STEP_SUMMARY
           echo "**Cluster:** \`${{ secrets.ECS_CLUSTER }}\`" >> $GITHUB_STEP_SUMMARY
           echo "**Service:** \`${{ secrets.ECS_SERVICE }}\`" >> $GITHUB_STEP_SUMMARY
+
+      - name: Notify success
+        if: success() && inputs.pr_number != ''
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: ${{ inputs.pr_number }},
+              body: `✅ **Deploy** completed successfully!
+              
+              **Image:** \`${{ github.sha }}\`
+              **Cluster:** \`${{ secrets.ECS_CLUSTER }}\`
+              **Service:** \`${{ secrets.ECS_SERVICE }}\`
+              [View workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})`
+                          });
+
+      - name: Notify failure
+        if: failure() && inputs.pr_number != ''
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: ${{ inputs.pr_number }},
+              body: `❌ **Deploy** failed!
+              
+              [View workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})`
+                          });
+              ```
