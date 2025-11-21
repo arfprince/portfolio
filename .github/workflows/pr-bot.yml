@@ -40,6 +40,7 @@ jobs:
             - auth
             - dashboard
             - payment
+            - deploy
             `;
 
                         await github.rest.issues.createComment({
