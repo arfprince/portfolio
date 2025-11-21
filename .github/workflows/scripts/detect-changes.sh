@@ -13,7 +13,7 @@ echo "Changed files:"
 echo "$CHANGED_FILES"
 echo "---"
 
-# Check each service directory
+# Check each service directory   
 # Modify these paths according to your actual project structure
 
 # Check API service
