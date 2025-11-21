@@ -119,6 +119,5 @@ jobs:
               repo: context.repo.repo,
               issue_number: ${{ inputs.pr_number }},
               body: `❌ **Deploy** failed!
-              
               [View workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})`
                           });
