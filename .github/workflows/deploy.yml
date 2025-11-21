@@ -1,5 +1,4 @@
 name: Deploy Portfolio to AWS ECS (Manual Run)
-
 on:
   workflow_dispatch:
 
