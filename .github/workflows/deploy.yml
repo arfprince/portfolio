@@ -2,6 +2,11 @@ name: Deploy Portfolio to AWS ECR
 
 on:
   workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR number that triggered this workflow (optional)'
+        required: false
+        type: string
 
 permissions:
   contents: read
