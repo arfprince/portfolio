@@ -94,7 +94,6 @@ jobs:
         if: success()
         uses: actions/github-script@v7
         env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
           IMAGE_TAG: ${{ github.sha }}
         with:
@@ -104,7 +103,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: ${{ github.event.inputs.pr_number }},
-              body: "🚀 **Deployment succeeded!**\nImage pushed: `${{ env.ECR_REGISTRY }}:${{ env.IMAGE_TAG }}`"
+              body: "🚀 **Deployment succeeded!**\nImage pushed: `${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}`"
             });
 
       - name: Notify Failure
