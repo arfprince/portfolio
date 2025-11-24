@@ -3,13 +3,22 @@ name: PR Deploy Bot
 on:
   pull_request:
     types: [opened, reopened, synchronize]
+  issue_comment:
+    types: [created]
 
 permissions:
   pull-requests: write
+  issues: write
+  actions: write
   contents: read
 
 jobs:
-  comment:
+
+  # ---------------------------------------------------------
+  # 1️⃣ COMMENT ON PR WHEN IT OPENS
+  # ---------------------------------------------------------
+  comment-on-pr:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - name: Post deploy instructions
@@ -44,8 +53,151 @@ jobs:
             `;
 
                         await github.rest.issues.createComment({
-                        owner: repo.owner,
-                        repo: repo.repo,
-                        issue_number: pr,
-                        body
+                          owner: repo.owner,
+                          repo: repo.repo,
+                          issue_number: pr,
+                          body
                         });
+
+  # ---------------------------------------------------------
+  # 2️⃣ HANDLE DEPLOY COMMANDS ON COMMENT
+  # ---------------------------------------------------------
+  handle-command:
+    if: |
+      github.event_name == 'issue_comment' &&
+      github.event.issue.pull_request &&
+      startsWith(github.event.comment.body, '/deploy')
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: React to comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.reactions.createForIssueComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: context.payload.comment.id,
+              content: 'rocket'
+            });
+
+      - name: Get PR details
+        id: pr
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
+            core.setOutput('branch', pr.data.head.ref);
+            core.setOutput('sha', pr.data.head.sha);
+
+      - name: Parse deploy command
+        id: parse
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const comment = context.payload.comment.body;
+            const parts = comment.trim().split(/\s+/).slice(1);
+            const requested = parts.map(s => s.toLowerCase());
+
+            const allowedServices = ['api', 'auth', 'dashboard', 'payment', 'deploy'];
+            const selected = requested.filter(s => allowedServices.includes(s));
+
+            if (selected.length === 0) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: `⚠️ No valid services found. Valid options: ${allowedServices.join(', ')}`
+              });
+              core.setFailed('No valid services specified');
+              return;
+            }
+
+            core.setOutput('services', selected.join(','));
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `🚀 Deploying: **${selected.join(', ')}** from branch \`${{ steps.pr.outputs.branch }}\``
+            });
+
+      # ---------------------------------------------------------
+      # 3️⃣ TRIGGER DOWNSTREAM WORKFLOWS
+      # ---------------------------------------------------------
+
+      - name: Trigger API deployment
+        if: contains(steps.parse.outputs.services, 'api')
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.PAT_TOKEN }}
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'api.yml',
+              ref: '${{ steps.pr.outputs.branch }}',
+              inputs: { pr_number: String(context.issue.number) }
+            });
+
+      - name: Trigger Auth deployment
+        if: contains(steps.parse.outputs.services, 'auth')
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.PAT_TOKEN }}
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'auth.yml',
+              ref: '${{ steps.pr.outputs.branch }}',
+              inputs: { pr_number: String(context.issue.number) }
+            });
+
+      - name: Trigger Dashboard deployment
+        if: contains(steps.parse.outputs.services, 'dashboard')
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.PAT_TOKEN }}
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'dashboard.yml',
+              ref: '${{ steps.pr.outputs.branch }}',
+              inputs: { pr_number: String(context.issue.number) }
+            });
+
+      - name: Trigger Payment deployment
+        if: contains(steps.parse.outputs.services, 'payment')
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.PAT_TOKEN }}
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'payment.yml',
+              ref: '${{ steps.pr.outputs.branch }}',
+              inputs: { pr_number: String(context.issue.number) }
+            });
+
+      - name: Trigger Deploy deployment
+        if: contains(steps.parse.outputs.services, 'deploy')
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.PAT_TOKEN }}
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'deploy.yml',
+              ref: '${{ steps.pr.outputs.branch }}',
+              inputs: { pr_number: String(context.issue.number) }
+            });
