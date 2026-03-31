@@ -61,21 +61,21 @@ const Hero = () => {
   ];
 
   return (
-    <section id="home" className="scroll-mt-24 min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-white via-primary-50/50 to-gray-50 dark:from-gray-900 dark:via-primary-900/20 dark:to-gray-900 pt-24 md:pt-28 pb-16 transition-colors duration-300">
-      {/* Animated Background */}
-      <div className="absolute inset-0 w-full h-full md:mt-4">
-        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
-        <motion.div
-          animate={{
-            backgroundPosition: ['0% 0%', '100% 100%'],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            repeatType: 'reverse',
-          }}
-          className="absolute inset-0 bg-gradient-to-br from-primary-600/10 via-transparent to-primary-600/10"
+    <section id="home" className="scroll-mt-24 min-h-screen flex items-center justify-center relative overflow-hidden pt-24 md:pt-28 pb-16">
+      {/* Map Background - Updated with your exact location */}
+      <div className="absolute inset-0 w-full h-full">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3552.2232427596773!2d91.84908989328777!3d24.909900321449975!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x37505546ce0e4d73%3A0x55ff0fbf624d5b6f!2sModina%20Market%20Point!5e0!3m2!1sen!2sbd!4v1764323266657!5m2!1sen!2sbd&style=feature:all%7Celement:geometry%7Ccolor:0x212121&style=feature:all%7Celement:labels.icon%7Cvisibility:off&style=feature:all%7Celement:labels.text.fill%7Ccolor:0x757575&style=feature:all%7Celement:labels.text.stroke%7Ccolor:0x212121&style=feature:administrative%7Celement:geometry%7Ccolor:0x757575&style=feature:administrative.country%7Celement:labels.text.fill%7Ccolor:0x9e9e9e&style=feature:administrative.locality%7Celement:labels.text.fill%7Ccolor:0xbdbdbd&style=feature:poi%7Celement:labels.text.fill%7Ccolor:0x757575&style=feature:poi.park%7Celement:geometry%7Ccolor:0x181818&style=feature:poi.park%7Celement:labels.text.fill%7Ccolor:0x616161&style=feature:poi.park%7Celement:labels.text.stroke%7Ccolor:0x1b1b1b&style=feature:road%7Celement:geometry.fill%7Ccolor:0x2c2c2c&style=feature:road%7Celement:labels.text.fill%7Ccolor:0x8a8a8a&style=feature:road.arterial%7Celement:geometry%7Ccolor:0x373737&style=feature:road.highway%7Celement:geometry%7Ccolor:0x3c3c3c&style=feature:road.highway.controlled_access%7Celement:geometry%7Ccolor:0x4e4e4e&style=feature:road.local%7Celement:labels.text.fill%7Ccolor:0x616161&style=feature:transit%7Celement:labels.text.fill%7Ccolor:0x757575&style=feature:water%7Celement:geometry%7Ccolor:0x000000&style=feature:water%7Celement:labels.text.fill%7Ccolor:0x3d3d3d"
+          width="100%"
+          height="100%"
+          style={{ border: 0, filter: 'brightness(0.6) contrast(1)'}}
+          allowFullScreen
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+          className="absolute inset-0"
         />
+
+        <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-black/60"></div>
       </div>
 
       <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 max-w-7xl relative z-10">
@@ -125,70 +125,66 @@ const Hero = () => {
               {personalInfo.bio}
             </motion.p>
 
-            {/* Profile Image - Shows here on mobile/tablet (< lg) */}
+            {/* Mobile Pin Profile - Shows here on mobile/tablet (< lg) */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8 }}
-              className="relative lg:hidden mb-6 md:mb-8 px-6 sm:px-8"
+              initial={{ opacity: 0, scale: 0.8, y: -30 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="relative lg:hidden mb-6 md:mb-8 flex justify-center"
             >
-              <div className="relative w-48 h-48 sm:w-56 sm:h-56 md:w-72 md:h-72 mx-auto">
-                {/* Glow Effect */}
+              <div className="relative">
+                {/* Pin Shadow */}
                 <motion.div
-                  animate={{
-                    boxShadow: [
-                      '0 0 20px rgba(59, 130, 246, 0.5)',
-                      '0 0 60px rgba(59, 130, 246, 0.8)',
-                      '0 0 20px rgba(59, 130, 246, 0.5)',
-                    ],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                  }}
-                  className="absolute inset-0 rounded-full"
+                  animate={{ scale: [1, 1.1, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-12 h-6 bg-black/30 rounded-full blur-sm"
                 />
                 
-                {/* Image Container */}
-                <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-primary-500/30 bg-gradient-to-br from-primary-600/20 to-primary-400/20">
-                  <Image
-                    src={personalInfo.profileImage}
-                    alt={personalInfo.name}
-                    fill
-                    className="object-cover"
-                    priority
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = 'https://via.placeholder.com/400x400/1e3a8a/3b82f6?text=Profile';
-                    }}
-                  />
-                </div>
-
-                {/* Floating Elements */}
+                {/* Pin Body */}
                 <motion.div
-                  animate={{
-                    y: [-10, 10, -10],
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                  }}
-                  className="absolute top-0 right-0 sm:-top-2 sm:-right-2 md:-top-4 md:-right-4 w-12 h-12 sm:w-14 sm:h-14 md:w-20 md:h-20 bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg flex items-center justify-center text-white font-bold text-base sm:text-lg md:text-2xl shadow-lg"
+                  animate={{ y: [-3, 3, -3] }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                  className="relative"
                 >
-                  {'</>'}
-                </motion.div>
-
-                <motion.div
-                  animate={{
-                    y: [10, -10, 10],
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    delay: 1,
-                  }}
-                  className="absolute bottom-0 left-0 sm:-bottom-2 sm:-left-2 md:-bottom-4 md:-left-4 w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white shadow-lg"
-                >
-                  <Star size={16} className="sm:w-5 sm:h-5" />
+                  {/* Pin Point */}
+                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[10px] border-r-[10px] border-t-[15px] border-l-transparent border-r-transparent border-t-primary-500"></div>
+                  
+                  {/* Profile Circle */}
+                  <div className="relative w-24 h-24 sm:w-28 sm:h-28 mb-4">
+                    {/* Glow Effect */}
+                    <motion.div
+                      animate={{
+                        boxShadow: [
+                          '0 0 15px rgba(59, 130, 246, 0.5)',
+                          '0 0 30px rgba(59, 130, 246, 0.8)',
+                          '0 0 15px rgba(59, 130, 246, 0.5)',
+                        ],
+                      }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                      className="absolute inset-0 rounded-full"
+                    />
+                    
+                    {/* Profile Image */}
+                    <div className="relative w-full h-full rounded-full overflow-hidden border-3 border-white shadow-xl bg-gradient-to-br from-primary-600/20 to-primary-400/20">
+                      <Image
+                        src={personalInfo.profileImage}
+                        alt={personalInfo.name}
+                        fill
+                        className="object-cover"
+                        priority
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = 'https://via.placeholder.com/400x400/1e3a8a/3b82f6?text=Profile';
+                        }}
+                      />
+                    </div>
+                    
+                    {/* Location Pulse */}
+                    <motion.div
+                      animate={{ scale: [1, 1.8, 1], opacity: [0.7, 0, 0.7] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                      className="absolute inset-0 rounded-full border-2 border-primary-400"
+                    />
+                  </div>
                 </motion.div>
               </div>
             </motion.div>
@@ -243,121 +239,69 @@ const Hero = () => {
                 </div>
               </motion.div>
             )}
-
-            {/* CTA Buttons */}
-            {/* <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 }}
-              className="flex flex-wrap gap-3 sm:gap-4 mb-6 md:mb-8"
-            >
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-6 sm:px-8 py-2.5 sm:py-3 border-2 bg-gradient-to-r from-primary-600 to-primary-500 text-white rounded-full font-medium text-sm sm:text-base shadow-lg hover:shadow-xl transition-shadow duration-200"
-              >
-                Hire Me
-              </motion.button>
-              <motion.a
-                href="#contact"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-6 sm:px-8 py-2.5 sm:py-3 border-2 border-primary-500 text-primary-600 dark:text-primary-400 rounded-full font-medium text-sm sm:text-base hover:bg-primary-500/10 transition-colors duration-200"
-              >
-                Contact Me
-              </motion.a>
-            </motion.div> */}
-
-            {/* Social Links */}
-            {/* <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.9 }}
-              className="flex gap-3 sm:gap-4"
-            >
-              {socialLinks.map((link) => {
-                const Icon = link.icon;
-                return (
-                  <motion.a
-                    key={link.name}
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    whileHover={{ scale: 1.2, rotate: 5 }}
-                    whileTap={{ scale: 0.9 }}
-                    className="w-11 h-11 sm:w-12 sm:h-12 bg-white/80 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 hover:border-primary-500 transition-all duration-200 shadow-lg"
-                  >
-                    <Icon size={20} />
-                  </motion.a>
-                );
-              })}
-            </motion.div> */}
           </motion.div>
 
-          {/* Right Content - Profile Image (Shows only on large screens >= 1024px) */}
+          {/* Map Pin Profile - Shows only on large screens >= 1024px */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }}
-            className="relative hidden lg:block"
+            initial={{ opacity: 0, scale: 0.8, y: -50 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            className="relative hidden lg:flex justify-center items-end"
           >
-            <div className="relative w-80 h-80 md:w-96 md:h-96 mx-auto">
-              {/* Glow Effect */}
+            {/* Location Pin */}
+            <div className="relative">
+              {/* Pin Shadow */}
               <motion.div
-                animate={{
-                  boxShadow: [
-                    '0 0 20px rgba(59, 130, 246, 0.5)',
-                    '0 0 60px rgba(59, 130, 246, 0.8)',
-                    '0 0 20px rgba(59, 130, 246, 0.5)',
-                  ],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                }}
-                className="absolute inset-0 rounded-full"
+                animate={{ scale: [1, 1.1, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-16 h-8 bg-black/30 rounded-full blur-sm"
               />
               
-              {/* Image Container */}
-              <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-primary-500/30 bg-gradient-to-br from-primary-600/20 to-primary-400/20">
-                <Image
-                  src={personalInfo.profileImage}
-                  alt={personalInfo.name}
-                  fill
-                  className="object-cover"
-                  priority
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = 'https://via.placeholder.com/400x400/1e3a8a/3b82f6?text=Profile';
-                  }}
-                />
-              </div>
-
-              {/* Floating Elements */}
+              {/* Pin Body */}
               <motion.div
-                animate={{
-                  y: [-10, 10, -10],
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                }}
-                className="absolute -top-4 -right-4 w-20 h-20 bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg flex items-center justify-center text-white font-bold text-2xl shadow-lg"
+                animate={{ y: [-5, 5, -5] }}
+                transition={{ duration: 3, repeat: Infinity }}
+                className="relative"
               >
-                {'</>'}
-              </motion.div>
-
-              <motion.div
-                animate={{
-                  y: [10, -10, 10],
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  delay: 1,
-                }}
-                className="absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white shadow-lg"
-              >
-                <Star size={24} />
+                {/* Pin Point */}
+                <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[15px] border-r-[15px] border-t-[25px] border-l-transparent border-r-transparent border-t-primary-500"></div>
+                
+                {/* Profile Circle */}
+                <div className="relative w-40 h-40 mb-6">
+                  {/* Glow Effect */}
+                  <motion.div
+                    animate={{
+                      boxShadow: [
+                        '0 0 20px rgba(59, 130, 246, 0.5)',
+                        '0 0 40px rgba(59, 130, 246, 0.8)',
+                        '0 0 20px rgba(59, 130, 246, 0.5)',
+                      ],
+                    }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    className="absolute inset-0 rounded-full"
+                  />
+                  
+                  {/* Profile Image */}
+                  <div className="relative w-40 h-40 rounded-full overflow-hidden border-4 border-white shadow-2xl bg-gradient-to-br from-primary-600/20 to-primary-400/20">
+                    <Image
+                      src={personalInfo.profileImage}
+                      alt={personalInfo.name}
+                      fill
+                      className="object-cover"
+                      priority
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = 'https://via.placeholder.com/400x400/1e3a8a/3b82f6?text=Profile';
+                      }}
+                    />
+                  </div>
+                  
+                  {/* Location Pulse */}
+                  <motion.div
+                    animate={{ scale: [1, 2, 1], opacity: [0.7, 0, 0.7] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    className="absolute inset-0 rounded-full border-2 border-primary-400"
+                  />
+                </div>
               </motion.div>
             </div>
           </motion.div>
