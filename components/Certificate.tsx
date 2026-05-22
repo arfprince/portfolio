@@ -49,7 +49,7 @@ const Certificate = () => {
   };
 
   return (
-    <SectionWrapper id="certificates" className="bg-gray-50 dark:bg-gray-900/50 transition-colors duration-300">
+    <SectionWrapper id="certificates" className="bg-gray-50 dark:bg-[#111828] transition-colors duration-300">
       <motion.div
         variants={containerVariants}
         initial="hidden"
@@ -58,7 +58,7 @@ const Certificate = () => {
       >
         {/* Section Title */}
         <motion.div variants={itemVariants} className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900 dark:text-white">
             My <span className="text-primary-600">Certificates</span>
           </h2>
           <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
@@ -76,7 +76,7 @@ const Certificate = () => {
               key={certificate.id}
               variants={itemVariants}
               whileHover={{ scale: 1.05 }}
-              className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
+              className="bg-white dark:bg-[#1a2236] rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
               onClick={() => setSelectedCertificate(certificate)}
             >
               <div className="relative h-64 w-full">
@@ -111,7 +111,7 @@ const Certificate = () => {
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.8, opacity: 0 }}
-              className="relative max-w-4xl max-h-[90vh] bg-white dark:bg-gray-800 rounded-xl overflow-hidden"
+              className="relative max-w-4xl max-h-[90vh] bg-white dark:bg-[#1a2236] rounded-xl overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
               <button

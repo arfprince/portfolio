@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Sun, Moon } from "lucide-react";
 import Link from "next/link";
 import { personalInfo } from "@/lib/data";
+import { useTheme } from "@/components/ThemeProvider";
 
 const navItems = [
   { name: "Home", href: "#home" },
@@ -15,6 +16,36 @@ const navItems = [
   { name: "Resume", href: "#resume" },
   { name: "Contact", href: "#contact" },
 ];
+
+const ThemeToggle = () => {
+  const { theme, toggleTheme, mounted } = useTheme();
+  if (!mounted) return (
+    <div className="relative h-7 w-14 rounded-full bg-primary-600">
+      <span className="absolute top-0.5 right-0.5 h-6 w-6 rounded-full bg-white shadow-md" />
+    </div>
+  );
+  const isDark = theme === 'dark';
+  return (
+    <button
+      onClick={toggleTheme}
+      aria-label="Toggle theme"
+      className={`relative h-7 w-14 rounded-full transition-colors duration-300 focus:outline-none ${
+        isDark ? 'bg-primary-600' : 'bg-gray-300'
+      }`}
+    >
+      <span
+        className={`absolute top-0.5 left-0.5 flex h-6 w-6 items-center justify-center rounded-full bg-white shadow-md transition-transform duration-300 ${
+          isDark ? 'translate-x-7' : 'translate-x-0'
+        }`}
+      >
+        {isDark
+          ? <Moon size={13} className="text-primary-600" />
+          : <Sun size={13} className="text-yellow-500" />
+        }
+      </span>
+    </button>
+  );
+};
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -52,7 +83,7 @@ const Navbar = () => {
       transition={{ duration: 0.5 }}
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
         scrolled || isOpen
-          ? "bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-lg"
+          ? "bg-white/80 dark:bg-[#111828]/90 backdrop-blur-md shadow-lg"
           : "bg-transparent"
       }`}
     >
@@ -92,6 +123,7 @@ const Navbar = () => {
                 {item.name}
               </a>
             ))}
+            <ThemeToggle />
             <motion.a
               href={personalInfo.resumeUrl}
               download
@@ -111,13 +143,16 @@ const Navbar = () => {
             </motion.a>
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-          >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          {/* Mobile: theme toggle + hamburger */}
+          <div className="md:hidden flex items-center gap-2">
+            <ThemeToggle />
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="p-2 rounded-lg text-gray-800 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-[#1a2236] transition-colors"
+            >
+              {isOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Navigation */}
@@ -136,7 +171,7 @@ const Navbar = () => {
                     key={item.name}
                     href={item.href}
                     onClick={(e) => handleClick(e, item.href)}
-                    className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors duration-200"
+                    className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#1a2236] rounded-lg transition-colors duration-200"
                   >
                     {item.name}
                   </a>

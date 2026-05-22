@@ -15,7 +15,7 @@ const Resume = () => {
   };
 
   return (
-    <SectionWrapper id="resume" className="transition-colors duration-300">
+    <SectionWrapper id="resume" className="bg-white dark:bg-[#0C1521] transition-colors duration-300">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -24,7 +24,7 @@ const Resume = () => {
       >
         {/* Section Title */}
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900 dark:text-white">
             My <span className="text-primary-600">Resume</span>
           </h2>
           <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
@@ -39,7 +39,7 @@ const Resume = () => {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden"
+            className="bg-white dark:bg-[#1a2236] rounded-2xl shadow-xl overflow-hidden"
           >
             {/* Header */}
             <div className="bg-gradient-to-r from-primary-600 to-primary-500 p-8 text-white">
@@ -81,7 +81,7 @@ const Resume = () => {
                       {index < experiences.length - 1 && (
                         <div className="absolute left-0.5 top-4 bottom-0 w-px bg-gray-300 dark:bg-gray-700"></div>
                       )}
-                      <div className="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4">
+                      <div className="bg-gray-50 dark:bg-[#111828] rounded-lg p-4">
                         <h5 className="font-semibold text-lg text-gray-800 dark:text-gray-200">
                           {exp.position}
                         </h5>
@@ -155,10 +155,10 @@ const Resume = () => {
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
               whileHover={{ scale: 1.05 }}
-              className="bg-white dark:bg-gray-800 rounded-xl p-6 text-center shadow-md flex-1"
+              className="bg-white dark:bg-[#1a2236] rounded-xl p-6 text-center shadow-md flex-1"
             >
               <div className="w-16 h-16 bg-blue-400 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-bold text-blue-800">1+</span>
+                <span className="text-2xl font-bold text-blue-800">2+</span>
               </div>
               <h4 className="font-semibold text-gray-800 dark:text-gray-200">
                 Years Experience
@@ -174,7 +174,7 @@ const Resume = () => {
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
               whileHover={{ scale: 1.05 }}
-              className="bg-white dark:bg-gray-800 rounded-xl p-6 text-center shadow-md flex-1"
+              className="bg-white dark:bg-[#1a2236] rounded-xl p-6 text-center shadow-md flex-1"
             >
               <div className="w-16 h-16 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl font-bold text-purple-600">30+</span>
@@ -189,7 +189,7 @@ const Resume = () => {
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
               whileHover={{ scale: 1.05 }}
-              className="bg-white dark:bg-gray-800 rounded-xl p-6 text-center shadow-md flex-1"
+              className="bg-white dark:bg-[#1a2236] rounded-xl p-6 text-center shadow-md flex-1"
             >
               <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl font-bold text-green-600">15+</span>

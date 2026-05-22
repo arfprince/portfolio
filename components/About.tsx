@@ -2,8 +2,8 @@
 
 import { motion } from 'framer-motion';
 import SectionWrapper from './SectionWrapper';
-import { personalInfo, experiences, education } from '@/lib/data';
-import { Calendar, MapPin, Mail, Phone, Briefcase, GraduationCap } from 'lucide-react';
+import { personalInfo, experiences } from '@/lib/data';
+import { Calendar, MapPin, Mail, Phone, Briefcase } from 'lucide-react';
 
 const About = () => {
   const containerVariants = {
@@ -28,7 +28,7 @@ const About = () => {
   };
 
   return (
-    <SectionWrapper id="about" className="bg-gray-50 dark:bg-gray-900/50 transition-colors duration-300">
+    <SectionWrapper id="about" className="bg-gray-50 dark:bg-[#0C1521] transition-colors duration-300">
       <motion.div
         variants={containerVariants}
         initial="hidden"
@@ -37,7 +37,7 @@ const About = () => {
       >
         {/* Section Title */}
         <motion.div variants={itemVariants} className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900 dark:text-white">
             About <span className="text-primary-600">Me</span>
           </h2>
           <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
@@ -84,21 +84,21 @@ const About = () => {
             <div className="grid grid-cols-3 gap-4 mt-8">
               <motion.div
                 whileHover={{ scale: 1.05 }}
-                className="bg-white dark:bg-gray-800 rounded-lg p-4 text-center shadow-md"
+                className="bg-white dark:bg-[#1a2236] rounded-lg p-4 text-center shadow-md"
               >
-                <h4 className="text-3xl font-bold text-primary-600">1+</h4>
+                <h4 className="text-3xl font-bold text-primary-600">2+</h4>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Years Experience</p>
               </motion.div>
               <motion.div
                 whileHover={{ scale: 1.05 }}
-                className="bg-white dark:bg-gray-800 rounded-lg p-4 text-center shadow-md"
+                className="bg-white dark:bg-[#1a2236] rounded-lg p-4 text-center shadow-md"
               >
                 <h4 className="text-3xl font-bold text-primary-600">10+</h4>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Projects Completed</p>
               </motion.div>
               {/* <motion.div
                 whileHover={{ scale: 1.05 }}
-                className="bg-white dark:bg-gray-800 rounded-lg p-4 text-center shadow-md"
+                className="bg-white dark:bg-[#1a2236] rounded-lg p-4 text-center shadow-md"
               >
                 <h4 className="text-3xl font-bold text-primary-600">100+</h4>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Happy Clients</p>
@@ -106,78 +106,46 @@ const About = () => {
             </div>
           </motion.div>
 
-          {/* Experience & Education */}
+          {/* Currently Working */}
           <motion.div variants={itemVariants}>
-            {/* Experience */}
-            <div className="mb-8">
-              <h3 className="text-2xl font-semibold mb-6 text-gray-800 dark:text-gray-200 flex items-center gap-2">
-                <Briefcase className="text-primary-600" size={24} />
-                Experience
-              </h3>
-              
-              <div className="space-y-6">
-                {experiences.slice(0, 2).map((exp, index) => (
-                  <motion.div
-                    key={exp.id}
-                    initial={{ opacity: 0, x: 20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    className="relative pl-8 before:absolute before:left-0 before:top-2 before:w-2 before:h-2 before:bg-primary-600 before:rounded-full"
-                  >
-                    <div className="absolute left-0.5 top-4 bottom-0 w-px bg-gray-300 dark:bg-gray-700"></div>
-                    <h4 className="font-semibold text-lg text-gray-800 dark:text-gray-200">
-                      {exp.position}
-                    </h4>
-                    <p className="text-primary-600 font-medium">{exp.company}</p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1 mt-1">
-                      <Calendar size={14} />
-                      {exp.duration}
-                    </p>
-                    <ul className="mt-3 space-y-1">
-                      {exp.description.slice(0, 2).map((desc, i) => (
-                        <li key={i} className="text-sm text-gray-600 dark:text-gray-400">
-                          • {desc}
-                        </li>
-                      ))}
-                    </ul>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
+            <h3 className="text-2xl font-semibold mb-6 text-gray-800 dark:text-gray-200 flex items-center gap-2">
+              <Briefcase className="text-primary-600" size={24} />
+              Currently Working
+            </h3>
 
-            {/* Education */}
-            <div>
-              <h3 className="text-2xl font-semibold mb-6 text-gray-800 dark:text-gray-200 flex items-center gap-2">
-                <GraduationCap className="text-primary-600" size={24} />
-                Education
-              </h3>
-              
-              <div className="space-y-6">
-                {education.map((edu, index) => (
-                  <motion.div
-                    key={edu.id}
-                    initial={{ opacity: 0, x: 20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md"
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.4 }}
+              className="bg-white dark:bg-[#1a2236] rounded-xl p-6 shadow-md"
+            >
+              <h4 className="font-semibold text-lg text-gray-800 dark:text-gray-200">
+                {experiences[0].position}
+              </h4>
+              <p className="text-primary-600 font-medium mt-1">{experiences[0].company}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1 mt-2">
+                <Calendar size={14} />
+                {experiences[0].duration}
+              </p>
+              <ul className="mt-4 space-y-2">
+                {experiences[0].description.map((desc, i) => (
+                  <li key={i} className="text-sm text-gray-600 dark:text-gray-400 flex items-start gap-2">
+                    <span className="text-primary-600 mt-0.5">•</span>
+                    {desc}
+                  </li>
+                ))}
+              </ul>
+              <div className="flex flex-wrap gap-2 mt-4">
+                {experiences[0].technologies.map((tech) => (
+                  <span
+                    key={tech}
+                    className="px-2 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 text-xs rounded-md font-medium"
                   >
-                    <h4 className="font-semibold text-lg text-gray-800 dark:text-gray-200">
-                      {edu.degree}
-                    </h4>
-                    <p className="text-primary-600 font-medium">{edu.institution}</p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1 mt-1">
-                      <Calendar size={14} />
-                      {edu.duration}
-                    </p>
-                    {edu.description && (
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                        {edu.description}
-                      </p>
-                    )}
-                  </motion.div>
+                    {tech}
+                  </span>
                 ))}
               </div>
-            </div>
+            </motion.div>
           </motion.div>
         </div>
       </motion.div>

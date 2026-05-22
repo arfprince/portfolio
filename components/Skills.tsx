@@ -64,6 +64,20 @@ const Skills = () => {
     );
   };
 
+  const getBarColor = (level: number) => {
+    if (level >= 90) return 'from-emerald-400 to-green-500';
+    if (level >= 75) return 'from-blue-400 to-primary-500';
+    if (level >= 60) return 'from-yellow-400 to-orange-400';
+    return 'from-red-400 to-orange-500';
+  };
+
+  const getLevelColor = (level: number) => {
+    if (level >= 90) return 'text-emerald-500 dark:text-emerald-400';
+    if (level >= 75) return 'text-blue-500 dark:text-blue-400';
+    if (level >= 60) return 'text-yellow-500 dark:text-yellow-400';
+    return 'text-red-500 dark:text-red-400';
+  };
+
   const filteredSkills =
     selectedCategory === "all"
       ? skills
@@ -91,7 +105,7 @@ const Skills = () => {
   };
 
   return (
-    <SectionWrapper id="skills" className="transition-colors duration-300">
+    <SectionWrapper id="skills" className="bg-white dark:bg-[#111828] transition-colors duration-300">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -100,7 +114,7 @@ const Skills = () => {
       >
         {/* Section Title */}
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900 dark:text-white">
             My <span className="text-primary-600">Skills</span>
           </h2>
           <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
@@ -118,8 +132,8 @@ const Skills = () => {
               onClick={() => setSelectedCategory(category.id)}
               className={`px-6 py-2 rounded-full font-medium transition-all duration-200 ${
                 selectedCategory === category.id
-                  ? "bg-blue-500 text-white shadow-lg"
-                  : "bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-700"
+                  ? "bg-blue-500 dark:bg-primary-600 text-white shadow-lg"
+                  : "bg-gray-200 dark:bg-[#1a2236] text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-[#243050]"
               }`}
             >
               {category.name}
@@ -144,7 +158,7 @@ const Skills = () => {
                 scale: 1.05,
                 boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
               }}
-              className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md hover:shadow-xl transition-all duration-300"
+              className="bg-white dark:bg-[#1a2236] rounded-xl p-6 shadow-md hover:shadow-xl transition-all duration-300"
             >
               <div className="flex flex-col items-center">
                 {/* Icon */}
@@ -165,14 +179,14 @@ const Skills = () => {
                 {/* Progress Bar */}
                 <div className="w-full">
                   <div className="flex justify-between mb-1">
-                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                    <span className="text-xs text-gray-500 dark:text-gray-300 font-medium">
                       Proficiency
                     </span>
-                    <span className="text-xs text-primary-600 font-semibold">
+                    <span className={`text-xs font-bold ${getLevelColor(skill.level)}`}>
                       {skill.level}%
                     </span>
                   </div>
-                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
+                  <div className="w-full bg-gray-200 dark:bg-[#243050] rounded-full h-2 overflow-hidden">
                     <motion.div
                       key={`${selectedCategory}-${skill.name}-bar`}
                       initial={{ width: 0 }}
@@ -183,7 +197,7 @@ const Skills = () => {
                         delay: index * 0.1,
                         ease: "easeOut",
                       }}
-                      className="h-full bg-gradient-to-r from-primary-500 to-primary-600 rounded-full"
+                      className={`h-full bg-gradient-to-r ${getBarColor(skill.level)} rounded-full`}
                     />
                   </div>
                 </div>
@@ -205,7 +219,7 @@ const Skills = () => {
               whileHover={{ scale: 1.1 }}
               className="w-20 h-20 bg-gradient-to-br from-blue-400 to-blue-700 rounded-full flex items-center justify-center mx-auto mb-4"
             >
-              <span className="text-white text-2xl font-bold">1+</span>
+              <span className="text-white text-2xl font-bold">2+</span>
             </motion.div>
             <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
               Years of Experience

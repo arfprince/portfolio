@@ -5,8 +5,8 @@ export const personalInfo = {
   title: "Software Engineer",
   email: "parmanurrahmanfaisal@gmail.com",
   phone: "+8801521528257",
-  location: "Chittagong, Bangladesh",
-  bio: "Passionate Computer Science student at IIUC with expertise in full-stack web development, competitive programming, and building innovative solutions. Experienced in React, Next.js, Node.js, and modern web technologies.",
+  location: "Chattogram, Bangladesh",
+  bio: "Software Engineer at AppifyLab with expertise in full-stack web development, DevOps, and competitive programming. Experienced in React, Next.js, AdonisJS, AWS, and Docker. CS student at IIUC with 2000+ problems solved across competitive programming platforms.",
   profileImage: "/profile.jpg",
   resumeUrl: "/resume.pdf",
   github: "https://github.com/arfprince",
@@ -21,34 +21,40 @@ export const personalInfo = {
 export const skills: Skill[] = [
   // Frontend
   { name: "React", level: 90, category: "frontend" },
-  { name: "Next.js", level: 85, category: "frontend" },
+  { name: "Next.js", level: 88, category: "frontend" },
   { name: "TypeScript", level: 88, category: "frontend" },
   { name: "Tailwind CSS", level: 92, category: "frontend" },
   { name: "JavaScript", level: 95, category: "frontend" },
   { name: "HTML/CSS", level: 95, category: "frontend" },
-  
+
   // Backend
   { name: "Node.js", level: 85, category: "backend" },
-  { name: "Python", level: 80, category: "backend" },
-  { name: "Express.js", level: 82, category: "backend" },
-  // { name: "PostgreSQL", level: 78, category: "backend" },
-  { name: "MongoDB", level: 75, category: "backend" },
+  { name: "AdonisJS", level: 80, category: "backend" },
+  { name: "MySQL", level: 80, category: "backend" },
+  { name: "Lucid ORM", level: 75, category: "backend" },
   { name: "REST APIs", level: 88, category: "backend" },
-  
+
   // DevOps
-  { name: "Docker", level: 75, category: "devops" },
-  { name: "AWS", level: 50, category: "devops" },
-  { name: "CI/CD", level: 72, category: "devops" },
+  { name: "Docker", level: 80, category: "devops" },
+  { name: "AWS", level: 72, category: "devops" },
+  { name: "Nginx", level: 75, category: "devops" },
+  { name: "CI/CD", level: 78, category: "devops" },
   { name: "Git", level: 90, category: "devops" },
-  { name: "Linux", level: 78, category: "devops" },
-  // { name: "Kubernetes", level: 65, category: "devops" },
+  { name: "Linux", level: 80, category: "devops" },
+  { name: "Bash scripting", level: 70, category: "devops" },
+  { name: "Microservices", level: 72, category: "devops" },
+
+  // Other
+  { name: "C++", level: 85, category: "other" },
+  { name: "C", level: 80, category: "other" },
+  { name: "Data Structures & Algorithms", level: 88, category: "other" },
 ];
 
 export const projects: Project[] = [
   {
     id: "1",
-    title: "Recipe Book",
-    description: "A comprehensive recipe management application where users can browse, search, and save their favorite recipes. Features include ingredient lists, step-by-step instructions, and nutritional information.",
+    title: "Foodie Finder",
+    description: "Offers a seamless way for users to discover, search, and explore recipes with authentication and personalized meal recommendations.",
     image: "/assets/project1.jpg",
     technologies: ["Next.js", "React", "Tailwind CSS", "Vercel"],
     liveUrl: "https://recipe-boo-k.vercel.app/",
@@ -57,10 +63,10 @@ export const projects: Project[] = [
   },
   {
     id: "2",
-    title: "My Blog Platform",
-    description: "A personal blogging platform with modern design and features including markdown support, categories, tags, and comment system. Built for sharing thoughts and technical articles.",
+    title: "Blog",
+    description: "A responsive blog app built with React and Vite, featuring create, edit, delete, and view functionalities with authentication.",
     image: "/assets/project2.jpg",
-    technologies: ["Next.js", "React", "MDX", "Tailwind CSS"],
+    technologies: ["React", "Vite", "JavaScript", "Tailwind CSS"],
     liveUrl: "https://my-blog-lime-eta.vercel.app/",
     githubUrl: "https://github.com/arfprince/my-blog",
     category: "fullstack"
@@ -68,7 +74,7 @@ export const projects: Project[] = [
   {
     id: "3",
     title: "Favourite Memes",
-    description: "An entertaining meme collection website with different themes, allowing users to browse and enjoy a curated collection of memes with a beautiful UI.",
+    description: "A meme searching web app that helps you find your favourite memes with different themes and a curated collection.",
     image: "/assets/project3.jpg",
     technologies: ["React", "JavaScript", "CSS3", "Cloudflare Pages"],
     liveUrl: "https://3268b058.favourite-memes.pages.dev/?demo=false&theme=coffee",
@@ -85,74 +91,111 @@ export const projects: Project[] = [
     githubUrl: "https://github.com/arfprince/portfolio",
     category: "frontend"
   },
-  // {
-  //   id: "5",
-  //   title: "Competitive Programming Solutions",
-  //   description: "A collection of my solutions to various competitive programming problems from platforms like Codeforces, CodeChef, AtCoder, and LeetCode.",
-  //   image: "/assets/project5.jpg",
-  //   technologies: ["C++", "Python", "Algorithms", "Data Structures"],
-  //   githubUrl: "https://github.com/arfprince",
-  //   category: "backend"
-  // },
-  // {
-  //   id: "6",
-  //   title: "Web Development Projects",
-  //   description: "Various web development projects showcasing different technologies and frameworks, from simple static sites to complex web applications.",
-  //   image: "/assets/project6.jpg",
-  //   technologies: ["React", "Node.js", "Express", "MongoDB"],
-  //   githubUrl: "https://github.com/arfprince",
-  //   category: "fullstack"
-  // }
 ];
 
 export const experiences: Experience[] = [
   {
     id: "1",
-    position: "Junior Software Engineer",
-    company: "Appifylab",
-    duration: "2024 - Present",
+    position: "Software Engineer",
+    company: "AppifyLab",
+    duration: "February 2025 – Present | Sylhet, Bangladesh",
     description: [
-      "Developed multiple web applications using modern frameworks",
-      "Built responsive and user-friendly interfaces",
-      "Deployed projects on Vercel and Cloudflare Pages",
-      "Implemented RESTful APIs and database integration"
+      "Frontend development using Next.js and React",
+      "Backend development with AdonisJS framework",
+      "Database management using MySQL and Lucid ORM",
+      "Deployment and management of Dockerized applications with Nginx (reverse proxy, SSL) and CI/CD pipelines using GitHub Actions",
+      "Hands-on experience with AWS services — including ALB, ECS, and RDS — for hosting, container orchestration and microservices architecture design",
+      "Integrated BunnyCDN for optimized asset delivery and Meta CAPI for enhanced server-side event tracking"
     ],
-    technologies: ["React", "Next.js", "Node.js", "Tailwind CSS"]
+    technologies: ["Next.js", "React", "AdonisJS", "MySQL", "Docker", "AWS", "Nginx", "GitHub Actions"]
   },
   {
     id: "2",
-    position: "Competitive Programmer",
-    company: "Multiple Platforms",
-    duration: "2021 - Present",
+    position: "Software Engineer Intern",
+    company: "AppifyLab",
+    duration: "December 2024 – February 2025",
     description: [
-      "Active participant on Codeforces, CodeChef, AtCoder, and LeetCode",
-      "Solved 2000+ algorithmic problems across various platforms",
-      "Consistently improving problem-solving and algorithmic thinking skills",
-      "Participated in multiple online programming contests"
+      "Assisted in frontend and backend development tasks",
+      "Gained hands-on experience with AdonisJS and MySQL",
+      "Contributed to deployment workflows using Docker and CI/CD pipelines"
     ],
-    technologies: ["C++", "Python", "Algorithms", "Data Structures"]
+    technologies: ["Next.js", "React", "AdonisJS", "MySQL", "Docker"]
   },
   {
     id: "3",
+    position: "DevOps Intern",
+    company: "AppifyLab",
+    duration: "November 2024 – December 2024",
+    description: [
+      "Managed Dockerized application deployments with Nginx as reverse proxy",
+      "Configured SSL and set up CI/CD pipelines using GitHub Actions",
+      "Worked with AWS services including ECS, ALB, and RDS"
+    ],
+    technologies: ["Docker", "Nginx", "AWS", "GitHub Actions", "Linux"]
+  },
+  {
+    id: "4",
+    position: "Competitive Programmer",
+    company: "Multiple Platforms",
+    duration: "2021 – Present",
+    description: [
+      "Codeforces: ARFprince — Max rating 1284 (Pupil)",
+      "CodeChef: arfprince — Max rating 1603",
+      "AtCoder: ARFprince — Max rating 599",
+      "LeetCode: 100+ problems solved",
+      "Solved 2000+ problems and participated in 250+ programming contests across platforms"
+    ],
+    technologies: ["C++", "C", "Algorithms", "Data Structures"]
+  },
+  {
+    id: "5",
     position: "Computer Science Student",
     company: "IIUC",
-    duration: "2021 - Present",
+    duration: "2021 – Present",
     description: [
       "Studying core CS subjects including Data Structures, Algorithms, and Software Engineering",
-      "Actively participating in university programming contests",
-      "Collaborating on group projects and assignments",
-      "Learning and applying theoretical concepts to practical projects"
+      "Teaching Assistant for C Programming II and Competitive Programming I (June 2023 – June 2024)",
+      "Competitive Programming Trainer and Mentor at IIUC Competitive Programming Society (2023)",
+      "Bootcamp Coordinator at IIUC Competitive Programming Society (January 2024 – 2025)"
     ],
-    technologies: ["Java", "C++", "Python", "Web Technologies"]
+    technologies: ["C++", "Java", "Python", "Web Technologies"]
   }
 ];
 
 export const education: Education[] = [
   {
     id: "1",
-    degree: "Bachelor of Science in Computer Science & Engineering",
+    degree: "B.Sc. in Computer Science and Engineering",
     institution: "International Islamic University Chittagong (IIUC)",
-    duration: "2021 - Present",
-    description: "Currently pursuing degree with focus on Software Engineering, Algorithms, and Web Development"
+    duration: "01/2021 – 12/2025",
+    description: "Pursuing degree with focus on Software Engineering, Algorithms, and Web Development"
+  }
+];
+
+export const achievements = [
+  {
+    category: "National Collegiate Programming Contest (NCPC)",
+    items: [
+      "Ranked 162nd out of 195 teams in the NCPC 2023",
+    ]
+  },
+  {
+    category: "Inter University Programming Contest (IUPC)",
+    items: [
+      "42nd among 98 teams at SEC Inter University JUPC 2022",
+      "36th in PU IUPC Divisional 2024",
+      "36th out of 197 teams in ICT Division – 7th DRMC International Tech Carnival 2024",
+      "36th in 15th IIUC Inter University Programming Contest 2023 [DIVISIONAL]",
+    ]
+  },
+  {
+    category: "Intra University Programming Contest",
+    items: [
+      "4th in CCE Inter-Department Programming Contest",
+      "5th in IIUC Intra-University Programming Contest",
+      "Rising Star – IIUC Intra University Junior Programming Contest 2022",
+      "2nd – IIUC Intra University Junior Programming Contest 2022 (organized by IIUCPS)",
+      "9th out of 43 teams in IIUC Intra University Programming Contest 2022",
+    ]
   }
 ];

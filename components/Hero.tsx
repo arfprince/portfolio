@@ -61,7 +61,7 @@ const Hero = () => {
   ];
 
   return (
-    <section id="home" className="scroll-mt-24 min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-white via-primary-50/50 to-gray-50 dark:from-gray-900 dark:via-primary-900/20 dark:to-gray-900 pt-24 md:pt-28 pb-16 transition-colors duration-300">
+    <section id="home" className="scroll-mt-24 min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-white via-primary-50/50 to-gray-50 dark:from-[#111828] dark:via-primary-900/20 dark:to-[#111828] pt-24 md:pt-28 pb-16 transition-colors duration-300">
       {/* Animated Background */}
       <div className="absolute inset-0 w-full h-full md:mt-4">
         <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
@@ -199,7 +199,7 @@ const Hero = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 }}
-                className="bg-white/80 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl p-3 sm:p-4 mb-6 md:mb-8 border border-gray-200 dark:border-gray-700 overflow-hidden shadow-lg"
+                className="bg-white/80 dark:bg-[#1a2236]/80 backdrop-blur-sm rounded-xl p-3 sm:p-4 mb-6 md:mb-8 border border-gray-200 dark:border-[#243050] overflow-hidden shadow-lg"
               >
                 <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
                   <div className="flex items-center gap-2">

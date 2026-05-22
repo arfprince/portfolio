@@ -49,7 +49,7 @@ const Projects = () => {
     <>
       <SectionWrapper
         id="projects"
-        className="bg-white dark:bg-gray-900/50 transition-colors duration-300"
+        className="bg-white dark:bg-[#0C1521] transition-colors duration-300"
       >
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -59,7 +59,7 @@ const Projects = () => {
         >
           {/* Section Title */}
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900 dark:text-white">
               My <span className="text-primary-600">Projects</span>
             </h2>
             <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
@@ -77,8 +77,8 @@ const Projects = () => {
                 onClick={() => setFilter(category.id)}
                 className={`px-6 py-2 rounded-full font-medium transition-all duration-200 ${
                   filter === category.id
-                    ? "bg-blue-500 text-white shadow-lg"
-                    : "bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-700"
+                    ? "bg-blue-500 dark:bg-primary-600 text-white shadow-lg"
+                    : "bg-gray-200 dark:bg-[#1a2236] text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-[#243050]"
                 }`}
               >
                 {category.name}
@@ -109,7 +109,7 @@ const Projects = () => {
                     key={project.id}
                     variants={itemVariants}
                     whileHover={{ y: -10 }}
-                    className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer group"
+                    className="bg-white dark:bg-[#1a2236] rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer group"
                     onClick={() => setSelectedProject(project)}
                   >
                     {/* Project Image */}
@@ -207,7 +207,7 @@ const Projects = () => {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-white dark:bg-gray-900 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+              className="bg-white dark:bg-[#111828] rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
             >
               {/* Modal Header */}
               <div className="relative h-64 bg-gradient-to-br from-primary-100 to-primary-200 dark:from-primary-900 dark:to-primary-800">
@@ -251,7 +251,7 @@ const Projects = () => {
                         rel="noopener noreferrer"
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
-                        className="w-10 h-10 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary-100 dark:hover:bg-primary-900 transition-colors"
+                        className="w-10 h-10 bg-gray-100 dark:bg-[#1a2236] rounded-full flex items-center justify-center hover:bg-primary-100 dark:hover:bg-primary-900 transition-colors"
                       >
                         <Github size={20} />
                       </motion.a>
@@ -263,7 +263,7 @@ const Projects = () => {
                         rel="noopener noreferrer"
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
-                        className="w-10 h-10 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary-100 dark:hover:bg-primary-900 transition-colors"
+                        className="w-10 h-10 bg-gray-100 dark:bg-[#1a2236] rounded-full flex items-center justify-center hover:bg-primary-100 dark:hover:bg-primary-900 transition-colors"
                       >
                         <ExternalLink size={20} />
                       </motion.a>

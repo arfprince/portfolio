@@ -13,7 +13,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white py-12 transition-colors duration-300">
+    <footer className="bg-gray-100 dark:bg-[#0d1521] text-gray-900 dark:text-white py-12 transition-colors duration-300">
       <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-7xl">
         <div className="flex flex-col md:flex-row items-center justify-between">
           {/* Logo/Name */}
@@ -59,7 +59,7 @@ const Footer = () => {
         </div>
 
         {/* Divider */}
-        <div className="my-8 border-t border-gray-300 dark:border-gray-800"></div>
+        <div className="my-8 border-t border-gray-300 dark:border-[#1a2236]"></div>
 
         {/* Copyright */}
         <motion.div
