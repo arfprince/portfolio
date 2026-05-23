@@ -115,7 +115,7 @@ const Skills = () => {
         {/* Section Title */}
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900 dark:text-white">
-            My <span className="text-primary-600">Skills</span>
+            My <span className="text-primary-600">Confidence</span>
           </h2>
           <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
             Technologies and tools I use to bring ideas to life
