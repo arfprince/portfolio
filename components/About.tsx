@@ -5,27 +5,28 @@ import SectionWrapper from './SectionWrapper';
 import { personalInfo, experiences } from '@/lib/data';
 import { Calendar, MapPin, Mail, Phone, Briefcase } from 'lucide-react';
 
-const About = () => {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-      },
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
     },
-  };
+  },
+};
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5,
-      },
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
     },
-  };
+  },
+};
+
+const About = () => {
 
   return (
     <SectionWrapper id="about" className="bg-gray-50 dark:bg-[#0C1521] transition-colors duration-300">
@@ -114,9 +115,7 @@ const About = () => {
             </h3>
 
             <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.4 }}
+              variants={itemVariants}
               className="bg-white dark:bg-[#1a2236] rounded-xl p-6 shadow-md"
             >
               <h4 className="font-semibold text-lg text-gray-800 dark:text-gray-200">
