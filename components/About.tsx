@@ -121,7 +121,7 @@ const About = () => {
               <h4 className="font-semibold text-lg text-gray-800 dark:text-gray-200">
                 {experiences[0].position}
               </h4>
-              <p className="text-primary-600 font-medium mt-1">{experiences[0].company}</p>
+              <p className="text-primary-600 dark:text-primary-400 font-medium mt-1">{experiences[0].company}</p>
               <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1 mt-2">
                 <Calendar size={14} />
                 {experiences[0].duration}

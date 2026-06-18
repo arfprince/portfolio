@@ -73,9 +73,9 @@ export default function GithubHeatmap() {
   return (
     <div className="w-full">
       <div className="flex items-center justify-between mb-2">
-        <p className="text-xs text-gray-400">GitHub contributions (running)</p>
+        <p className="text-xs text-gray-500 dark:text-gray-400">GitHub contributions (running)</p>
         {typeof data.total === 'number' && (
-          <p className="text-xs text-gray-400">Total: {data.total}</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400">Total: {data.total}</p>
         )}
       </div>
       <div className="w-full overflow-x-auto">

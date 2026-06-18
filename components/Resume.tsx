@@ -85,7 +85,7 @@ const Resume = () => {
                         <h5 className="font-semibold text-lg text-gray-800 dark:text-gray-200">
                           {exp.position}
                         </h5>
-                        <p className="text-primary-600 font-medium">
+                        <p className="text-primary-600 dark:text-primary-400 font-medium">
                           {exp.company}
                         </p>
                         <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1 mt-1">
@@ -158,7 +158,7 @@ const Resume = () => {
               className="bg-white dark:bg-[#1a2236] rounded-xl p-6 text-center shadow-md flex-1"
             >
               <div className="w-16 h-16 bg-blue-400 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-bold text-blue-800">2+</span>
+                <span className="text-2xl font-bold text-blue-800 dark:text-blue-400">2+</span>
               </div>
               <h4 className="font-semibold text-gray-800 dark:text-gray-200">
                 Years Experience
@@ -192,7 +192,7 @@ const Resume = () => {
               className="bg-white dark:bg-[#1a2236] rounded-xl p-6 text-center shadow-md flex-1"
             >
               <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-bold text-green-600">15+</span>
+                <span className="text-2xl font-bold text-green-600 dark:text-green-400">15+</span>
               </div>
               <h4 className="font-semibold text-gray-800 dark:text-gray-200">
                 Technologies

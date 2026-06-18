@@ -2,10 +2,10 @@
 
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa';
+import { FaGithub } from 'react-icons/fa';
 import { personalInfo } from '@/lib/data';
 import { useEffect, useState } from 'react';
-import { GitCommit, Star, GitFork } from 'lucide-react';
+import { GitCommit, Star } from 'lucide-react';
 import GithubHeatmap from '@/components/GithubHeatmap';
 
 interface GitHubStats {
@@ -54,28 +54,13 @@ const Hero = () => {
     fetchGitHubData();
   }, []);
 
-  const socialLinks = [
-    { name: 'GitHub', icon: FaGithub, url: personalInfo.github },
-    { name: 'LinkedIn', icon: FaLinkedin, url: personalInfo.linkedin },
-    { name: 'Twitter', icon: FaTwitter, url: personalInfo.twitter },
-  ];
 
   return (
     <section id="home" className="scroll-mt-24 min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-white via-primary-50/50 to-gray-50 dark:from-[#111828] dark:via-primary-900/20 dark:to-[#111828] pt-24 md:pt-28 pb-16 transition-colors duration-300">
       {/* Animated Background */}
       <div className="absolute inset-0 w-full h-full md:mt-4">
         <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
-        <motion.div
-          animate={{
-            backgroundPosition: ['0% 0%', '100% 100%'],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            repeatType: 'reverse',
-          }}
-          className="absolute inset-0 bg-gradient-to-br from-primary-600/10 via-transparent to-primary-600/10"
-        />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-600/10 via-transparent to-primary-600/10" />
       </div>
 
       <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 max-w-7xl relative z-10">
@@ -93,7 +78,7 @@ const Hero = () => {
               transition={{ delay: 0.2 }}
               className="mb-4 sm:mb-6"
             >
-              <span className="text-primary-600 dark:text-primary-400 font-medium text-base sm:text-lg">Hello, I'm</span>
+              <span className="text-gray-800 dark:text-gray-300 font-medium text-base sm:text-lg">Hello, I'm</span>
             </motion.div>
 
             <motion.h1
@@ -134,23 +119,10 @@ const Hero = () => {
             >
               <div className="relative w-48 h-48 sm:w-56 sm:h-56 md:w-72 md:h-72 mx-auto">
                 {/* Glow Effect */}
-                <motion.div
-                  animate={{
-                    boxShadow: [
-                      '0 0 20px rgba(59, 130, 246, 0.5)',
-                      '0 0 60px rgba(59, 130, 246, 0.8)',
-                      '0 0 20px rgba(59, 130, 246, 0.5)',
-                    ],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                  }}
-                  className="absolute inset-0 rounded-full"
-                />
+                <div className="absolute inset-0 rounded-full bg-primary-500/20 blur-xl animate-pulse" />
                 
                 {/* Image Container */}
-                <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-primary-500/30 bg-gradient-to-br from-primary-600/20 to-primary-400/20">
+                <div className="relative w-full h-full rounded-full overflow-hidden bg-gradient-to-br from-primary-600/20 to-primary-400/20">
                   <Image
                     src={personalInfo.profileImage}
                     alt={personalInfo.name}
@@ -218,7 +190,7 @@ const Hero = () => {
                 
                 {recentCommits.length > 0 && (
                   <div className="space-y-2">
-                    <p className="text-xs text-gray-600 dark:text-gray-500 mb-2">Recent commits:</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">Recent commits:</p>
                     {recentCommits.map((commit, index) => (
                       <motion.div
                         key={index}
@@ -230,7 +202,7 @@ const Hero = () => {
                         <GitCommit size={14} className="text-green-400 mt-0.5" />
                         <div className="flex-1">
                           <p className="text-gray-700 dark:text-gray-300 truncate">{commit.message}</p>
-                          <p className="text-gray-500 dark:text-gray-500">{commit.repo.split('/')[1]} • {commit.date}</p>
+                          <p className="text-gray-500 dark:text-gray-400">{commit.repo.split('/')[1]} • {commit.date}</p>
                         </div>
                       </motion.div>
                     ))}
@@ -303,23 +275,10 @@ const Hero = () => {
           >
             <div className="relative w-80 h-80 md:w-96 md:h-96 mx-auto">
               {/* Glow Effect */}
-              <motion.div
-                animate={{
-                  boxShadow: [
-                    '0 0 20px rgba(59, 130, 246, 0.5)',
-                    '0 0 60px rgba(59, 130, 246, 0.8)',
-                    '0 0 20px rgba(59, 130, 246, 0.5)',
-                  ],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                }}
-                className="absolute inset-0 rounded-full"
-              />
+              <div className="absolute inset-0 rounded-full bg-primary-500/20 blur-xl animate-pulse" />
               
               {/* Image Container */}
-              <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-primary-500/30 bg-gradient-to-br from-primary-600/20 to-primary-400/20">
+              <div className="relative w-full h-full rounded-full overflow-hidden bg-gradient-to-br from-primary-600/20 to-primary-400/20">
                 <Image
                   src={personalInfo.profileImage}
                   alt={personalInfo.name}
