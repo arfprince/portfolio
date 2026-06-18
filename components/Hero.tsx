@@ -29,17 +29,40 @@ const Hero = () => {
         const userResponse = await fetch('https://api.github.com/users/arfprince');
         const userData = await userResponse.json();
 
-        const eventsResponse = await fetch('https://api.github.com/users/arfprince/events/public?per_page=5');
+        const eventsResponse = await fetch('https://api.github.com/users/arfprince/events/public?per_page=10');
         const eventsData = await eventsResponse.json();
-
-        const pushEvents = eventsData
+        const rawPushEvents = (eventsData as any[])
           .filter((event: any) => event.type === 'PushEvent')
-          .slice(0, 3)
-          .map((event: any) => ({
-            repo: event.repo.name,
-            message: event.payload.commits?.[0]?.message || 'No commit message',
-            date: new Date(event.created_at).toLocaleDateString(),
-          }));
+          .slice(0, 3);
+
+        const pushEvents = await Promise.all(
+          rawPushEvents.map(async (event: any) => {
+            // payload.commits is sometimes absent; fall back to fetching via head SHA
+            const inlineMsg = event.payload?.commits?.[0]?.message;
+            if (inlineMsg) {
+              return {
+                repo: event.repo.name,
+                message: inlineMsg.split('\n')[0],
+                date: new Date(event.created_at).toLocaleDateString(),
+              };
+            }
+            try {
+              const sha = event.payload?.head;
+              const [, repoName] = (event.repo.name as string).split('/');
+              const commitRes = await fetch(
+                `https://api.github.com/repos/arfprince/${repoName}/commits/${sha}`
+              );
+              const commitData = await commitRes.json();
+              return {
+                repo: event.repo.name,
+                message: (commitData.commit?.message as string | undefined)?.split('\n')[0] ?? '—',
+                date: new Date(event.created_at).toLocaleDateString(),
+              };
+            } catch {
+              return { repo: event.repo.name, message: '—', date: new Date(event.created_at).toLocaleDateString() };
+            }
+          })
+        );
 
         setGithubStats({ publicRepos: userData.public_repos, followers: userData.followers });
         setRecentCommits(pushEvents);
@@ -70,6 +93,7 @@ const Hero = () => {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
+            className="w-full min-w-0"
           >
             {/* Available badge */}
             <motion.div
@@ -97,7 +121,7 @@ const Hero = () => {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-3 leading-tight tracking-tight"
+              className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 dark:text-white mb-3 leading-tight tracking-tight wrap-break-word"
             >
               {personalInfo.name}
             </motion.h1>
@@ -117,7 +141,7 @@ const Hero = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
-              className="text-gray-600 dark:text-gray-400 text-base md:text-lg leading-relaxed mb-8 max-w-lg"
+              className="text-gray-600 dark:text-gray-400 text-base md:text-lg leading-relaxed mb-8 w-full"
             >
               {personalInfo.bio}
             </motion.p>

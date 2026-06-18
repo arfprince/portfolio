@@ -79,26 +79,25 @@ export default function GithubHeatmap() {
         )}
       </div>
       <div className="w-full overflow-x-auto">
-        <div className="inline-flex gap-[2px] min-w-full" style={{ minWidth: 'fit-content' }}>
+        <div className="inline-flex gap-0.5">
           {columns.map((week, wi) => (
-            <div key={wi} className="flex flex-col gap-[2px]">
+            <div key={wi} className="flex flex-col gap-0.5">
               {week.map((d) => {
                 const paletteLight = ['#ebedf0', '#9be9a8', '#40c463', '#30a14e', '#216e39'];
-                const paletteDark = ['#161b22', '#0e4429', '#006d32', '#26a641', '#39d353'];
+                const paletteDark  = ['#161b22', '#0e4429', '#006d32', '#26a641', '#39d353'];
                 const palette = isDark ? paletteDark : paletteLight;
                 const { t1, t2, t3 } = thresholds;
                 let level = 0;
                 if (d.count > 0) {
                   level = d.count <= t1 ? 1 : d.count <= t2 ? 2 : d.count <= t3 ? 3 : 4;
                 }
-                const bg = palette[level];
                 return (
                   <div
                     key={d.date}
                     title={`${d.date}: ${d.count} contributions`}
                     aria-label={`${d.date}: ${d.count} contributions`}
-                    className="h-[8px] w-[8px] rounded-[2px] flex-shrink-0"
-                    style={{ backgroundColor: bg, border: '1px solid rgba(0,0,0,0.1)' }}
+                    className="h-1 w-1 sm:h-2 sm:w-2 rounded-xs shrink-0"
+                    style={{ backgroundColor: palette[level], border: '1px solid rgba(0,0,0,0.08)' }}
                   />
                 );
               })}
