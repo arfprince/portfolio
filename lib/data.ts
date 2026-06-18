@@ -105,7 +105,7 @@ export const experiences: Experience[] = [
       "Database management using MySQL and Lucid ORM",
       "Deployment and management of Dockerized applications with Nginx (reverse proxy, SSL) and CI/CD pipelines using GitHub Actions",
       "Hands-on experience with AWS services — including ALB, ECS, and RDS — for hosting, container orchestration and microservices architecture design",
-      "Integrated BunnyCDN for optimized asset delivery and Meta CAPI for enhanced server-side event tracking"
+      "Integrated Stripe payment gateway for end-to-end transaction processing, implemented Meta Conversions API (CAPI) for server-side event tracking with improved ad attribution accuracy, and enforced role-based access control (RBAC) for tiered user permissions"
     ],
     technologies: ["Next.js", "React", "AdonisJS", "MySQL", "Docker", "AWS", "Nginx", "GitHub Actions"]
   },
