@@ -6,44 +6,34 @@ import Image from "next/image";
 import SectionWrapper from "./SectionWrapper";
 import { projects } from "@/lib/data";
 import { Project } from "@/types";
-import { ExternalLink, Github, X, Code2, Eye } from "lucide-react";
+import { ExternalLink, X, Code2, Eye } from "lucide-react";
+import { FaGithub } from "react-icons/fa";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+};
+
+const categories = [
+  { id: "all",       name: "All" },
+  { id: "frontend",  name: "Frontend" },
+  { id: "backend",   name: "Backend" },
+  { id: "fullstack", name: "Full Stack" },
+];
 
 const Projects = () => {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [filter, setFilter] = useState<string>("all");
 
-  const categories = [
-    { id: "all", name: "All Projects" },
-    { id: "frontend", name: "Frontend" },
-    { id: "backend", name: "Backend" },
-    { id: "fullstack", name: "Full Stack" },
-  ];
-
   const filteredProjects =
     filter === "all"
       ? projects
       : projects.filter((project) => project.category === filter);
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5,
-      },
-    },
-  };
 
   return (
     <>
@@ -59,30 +49,29 @@ const Projects = () => {
         >
           {/* Section Title */}
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900 dark:text-white">
-              My <span className="text-primary-600">Projects</span>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary-600 dark:text-primary-400 mb-3">Portfolio</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+              Selected Projects
             </h2>
-            <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+            <p className="text-gray-500 dark:text-gray-400 max-w-xl mx-auto">
               A showcase of my work and the problems I've solved
             </p>
           </div>
 
           {/* Filter Buttons */}
-          <div className="flex flex-wrap justify-center gap-4 mb-12">
+          <div className="flex flex-wrap justify-center gap-2 mb-10">
             {categories.map((category) => (
-              <motion.button
+              <button
                 key={category.id}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
                 onClick={() => setFilter(category.id)}
-                className={`px-6 py-2 rounded-full font-medium transition-all duration-200 ${
+                className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${
                   filter === category.id
-                    ? "bg-blue-500 dark:bg-primary-600 text-white shadow-lg"
-                    : "bg-gray-200 dark:bg-[#1a2236] text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-[#243050]"
+                    ? "bg-primary-600 text-white shadow-sm"
+                    : "bg-gray-100 dark:bg-[#1a2236] text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-[#243050]"
                 }`}
               >
                 {category.name}
-              </motion.button>
+              </button>
             ))}
           </div>
 
@@ -166,7 +155,7 @@ const Projects = () => {
                             whileTap={{ scale: 0.9 }}
                             className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                           >
-                            <Github size={20} />
+                            <FaGithub size={20} />
                           </motion.a>
                         )}
                         {project.liveUrl && (
@@ -253,7 +242,7 @@ const Projects = () => {
                         whileTap={{ scale: 0.9 }}
                         className="w-10 h-10 bg-gray-100 dark:bg-[#1a2236] rounded-full flex items-center justify-center hover:bg-primary-100 dark:hover:bg-primary-900 transition-colors"
                       >
-                        <Github size={20} />
+                        <FaGithub size={20} />
                       </motion.a>
                     )}
                     {selectedProject.liveUrl && (
@@ -316,7 +305,7 @@ const Projects = () => {
                       whileTap={{ scale: 0.95 }}
                       className="px-6 py-3 bg-gray-800 text-white rounded-lg font-medium hover:bg-gray-900 transition-colors inline-flex items-center gap-2"
                     >
-                      <Github size={18} />
+                      <FaGithub size={18} />
                       View Source Code
                     </motion.a>
                   )}

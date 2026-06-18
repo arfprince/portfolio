@@ -24,11 +24,10 @@ const Resume = () => {
       >
         {/* Section Title */}
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900 dark:text-white">
-            My <span className="text-primary-600">Resume</span>
-          </h2>
-          <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Download my resume to learn more about my professional journey
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary-600 dark:text-primary-400 mb-3">Experience</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">Resume</h2>
+          <p className="text-gray-500 dark:text-gray-400 max-w-xl mx-auto">
+            My professional journey and technical experience
           </p>
         </div>
 
@@ -42,7 +41,7 @@ const Resume = () => {
             className="bg-white dark:bg-[#1a2236] rounded-2xl shadow-xl overflow-hidden"
           >
             {/* Header */}
-            <div className="bg-gradient-to-r from-primary-600 to-primary-500 p-8 text-white">
+            <div className="bg-linear-to-r from-primary-600 to-primary-500 p-8 text-white">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-3xl font-bold mb-2">
@@ -130,15 +129,7 @@ const Resume = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleDownload}
-                  className="
-                      px-8 py-4 
-                      bg-blue-500 text-white shadow-lg 
-                      hover:bg-blue-700 
-                      dark:bg-primary-600 dark:hover:bg-primary-700 
-                      rounded-full font-medium 
-                      transition-all duration-200 
-                      inline-flex items-center gap-3 group
-                    "
+                  className="px-8 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-medium transition-all duration-200 inline-flex items-center gap-2 shadow-sm"
                   >
                   <Download className="group-hover:animate-bounce" size={20} />
                   Download Full Resume (PDF)

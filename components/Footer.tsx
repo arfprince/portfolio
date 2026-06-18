@@ -24,7 +24,7 @@ const Footer = () => {
             transition={{ duration: 0.5 }}
             className="mb-6 md:mb-0"
           >
-            <h3 className="text-2xl font-bold bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
+            <h3 className="text-2xl font-bold bg-linear-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
               {personalInfo.name}
             </h3>
             <p className="text-gray-600 dark:text-gray-400 mt-1">{personalInfo.title}</p>
@@ -46,8 +46,7 @@ const Footer = () => {
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  whileHover={{ scale: 1.2, rotate: 5 }}
-                  whileTap={{ scale: 0.9 }}
+                  whileHover={{ y: -2 }}
                   className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200"
                   aria-label={link.name}
                 >

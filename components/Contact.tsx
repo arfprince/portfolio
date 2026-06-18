@@ -1,8 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useState, FormEvent } from "react";
-import emailjs from "@emailjs/browser";
+import React, { useState } from "react";
 import SectionWrapper from "./SectionWrapper";
 import { personalInfo } from "@/lib/data";
 import {
@@ -28,7 +27,7 @@ const Contact = () => {
     "idle" | "success" | "error"
   >("idle");
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: { preventDefault(): void }) => {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus("idle");
@@ -78,12 +77,10 @@ const Contact = () => {
       >
         {/* Section Title */}
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900 dark:text-white">
-            Get In <span className="text-primary-600">Touch</span>
-          </h2>
-          <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Have a project in mind or want to collaborate? Feel free to reach
-            out!
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary-600 dark:text-primary-400 mb-3">Contact</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">Get In Touch</h2>
+          <p className="text-gray-500 dark:text-gray-400 max-w-xl mx-auto">
+            Have a project in mind or want to collaborate? Feel free to reach out.
           </p>
         </div>
 
@@ -162,40 +159,25 @@ const Contact = () => {
 
             {/* Social Links */}
             <div>
-              <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">
-                Follow Me
-              </h4>
+              <p className="text-xs font-semibold uppercase tracking-[0.15em] text-gray-400 dark:text-gray-500 mb-4">Find me on</p>
               <div className="flex gap-4">
-                <motion.a
-                  href={personalInfo.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  whileHover={{ scale: 1.1, rotate: 5 }}
-                  whileTap={{ scale: 0.9 }}
-                  className="w-12 h-12 bg-gray-800 text-white rounded-full flex items-center justify-center hover:bg-primary-600 transition-colors"
-                >
-                  <FaGithub size={20} />
-                </motion.a>
-                <motion.a
-                  href={personalInfo.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  whileHover={{ scale: 1.1, rotate: 5 }}
-                  whileTap={{ scale: 0.9 }}
-                  className="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors"
-                >
-                  <FaLinkedin size={20} />
-                </motion.a>
-                <motion.a
-                  href={personalInfo.twitter}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  whileHover={{ scale: 1.1, rotate: 5 }}
-                  whileTap={{ scale: 0.9 }}
-                  className="w-12 h-12 bg-sky-500 text-white rounded-full flex items-center justify-center hover:bg-sky-600 transition-colors"
-                >
-                  <FaTwitter size={20} />
-                </motion.a>
+                {[
+                  { href: personalInfo.github,   Icon: FaGithub,   label: 'GitHub'   },
+                  { href: personalInfo.linkedin,  Icon: FaLinkedin, label: 'LinkedIn' },
+                  { href: personalInfo.twitter,   Icon: FaTwitter,  label: 'Twitter'  },
+                ].map(({ href, Icon, label }) => (
+                  <motion.a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ y: -2 }}
+                    aria-label={label}
+                    className="text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200"
+                  >
+                    <Icon size={22} />
+                  </motion.a>
+                ))}
               </div>
             </div>
           </motion.div>
@@ -279,16 +261,7 @@ const Contact = () => {
                   disabled={isSubmitting}
                   whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
                   whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
-                  className="
-                    w-full px-6 py-3
-                    bg-blue-500 text-white shadow-lg
-                    hover:bg-blue-700
-                    dark:bg-primary-600 dark:hover:bg-primary-700
-                    rounded-lg font-medium
-                    transition-all duration-200
-                    disabled:opacity-50 disabled:cursor-not-allowed
-                    flex items-center justify-center gap-2 cursor-pointer
-                  "
+                  className="w-full px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer shadow-sm"
                   >
                   {isSubmitting ? (
                     <>

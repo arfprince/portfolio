@@ -106,7 +106,7 @@ const Navbar = () => {
           {/* Logo */}
           <Link
             href="/"
-            className="text-2xl font-bold bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent"
+            className="text-2xl font-bold bg-linear-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent"
           >
             Portfolio
           </Link>
@@ -129,15 +129,7 @@ const Navbar = () => {
               download
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="
-                px-6 py-2
-                bg-blue-500 text-white shadow-lg
-                hover:bg-blue-700
-                dark:bg-primary-600 dark:hover:bg-primary-700
-                rounded-full font-medium
-                transition-all duration-200
-                inline-flex items-center justify-center
-              "
+              className="px-5 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-medium text-sm transition-all duration-200"
             >
               Download CV
             </motion.a>
@@ -179,7 +171,7 @@ const Navbar = () => {
                 <a
                   href={personalInfo.resumeUrl}
                   download
-                  className="w-full block text-center px-4 py-2 bg-gradient-to-r from-primary-600 to-primary-500 text-white! rounded-lg font-medium"
+                  className="w-full block text-center px-4 py-2 bg-primary-600 text-white rounded-lg font-medium"
                 >
                   Download CV
                 </a>
